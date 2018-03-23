@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <title> LoTime : Logiciel de feuille de temps </title>
+    <meta charset="UTF-8">
+    <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet"  >
+</head>
+
+<body >
+
+
+    <header>
+        <h1>LoTime </h1>
+        <h2> Logiciel de feuille de temps </h2>
+    </header>
+
+<div id="content">
+
+
+    {% block content %}{% endblock %}
+
+
+</div> <!-- #content -->
+   
+    <footer>
+
+      <p>
+        © 2018  — Designed By 
+        <b>Sophie Phouangsy</b> and <b>Benjamin Bonnaire</b> dans le cadre d'un projet pour le cours INF3005
+      </p>
+    </footer>
+</body>
+
+</html>

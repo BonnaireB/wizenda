@@ -1,0 +1,412 @@
+body {
+    color: #3a5199;
+    margin: auto;
+    font-family: "Verdana", Arial, sans-serif;
+    font-size: 12px;
+    background-color: #d6d7d2;
+}
+
+a {
+    color: #D5D6D2;
+    font-size: 13px;
+    text-decoration: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+b {
+    color: #f6ecec;
+    font-size: 12px;
+    font-family: "Verdana", Arial, sans-serif;
+    font-weight: normal;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 1px #6e6464;
+}
+
+em {
+    font-family: "Georgia", Arial, serif;
+    font-size: 13px;
+    color: #bc3368;
+    padding-left: 35px;
+    padding-right: 17px;
+}
+
+
+
+/* Header */
+
+header {
+    background-color: #2F2E33;
+    text-align: center;
+    margin-bottom: 100px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #D0D0D0;
+}
+
+header h1 {
+    color: #D5D6D2;
+    text-transform: uppercase;
+    font-family: Oswald, sans-serif;
+    font-size: 30px;
+    letter-spacing: 2px;
+}
+
+header h2 {
+    color: #fff;
+    text-transform: uppercase;
+    font-family: Oswald, sans-serif;
+    font-size: 20px;
+}
+
+
+/* Formulaire */
+
+#register {
+    font-family: Arial, Helvetica, sans-serif, sans-serif;
+    margin: auto;
+    width: 40%;
+    padding: 20px;
+    background-color: #302f33;
+    border: 1px solid #FAFAFA;
+    opacity: 0.8;
+    text-align: center;
+    font-size: 15px;
+    color: #fff;
+}
+
+#registerh1 {
+    text-transform: uppercase;
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+    border-bottom: 1px solid #FAFAFA;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+        letter-spacing: 2px;
+}
+
+p.login-button {
+    margin: 5px 0;
+}
+
+.matricule {
+    text-transform: uppercase;
+        letter-spacing: 1px;
+}
+
+#matricule {
+    margin-top: 5px;
+}
+
+#submitB {
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    border: 1px solid #fff;
+    color: #302f33;
+    box-shadow: 1px 1px 3px #8f8c8c;
+    font-size: 13px;
+}
+
+
+/* Footer */
+
+footer {
+    height: 50px;
+    background-color: #302f33;
+    margin-bottom: 100px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-top: 1px solid #D0D0D0;
+    margin: 0 auto;
+    overflow: hidden;
+    text-align: center;
+}
+
+footer p {
+    font-size: 11px;
+    color: #d6d7d2;
+    letter-spacing: 1px;
+    font-family: 'Raleway', sans-serif;
+}
+
+
+/* #content */
+
+#content {
+    margin-bottom: 200px;
+    width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 30px;
+    padding-right: 50px;
+    padding-left: 50px;
+    padding-bottom: 30px;
+}
+
+
+/* #contenu */
+
+#contenu {
+    background-color: #3A5199;
+    padding-right: 54px;
+    padding-left: 54px;
+    padding-bottom: 30px;
+    padding-top: 16px;
+}
+
+#contenu div {
+    float: left;
+    margin-right: 100px;
+}
+
+#contenu a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+#contenu h1 {
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #fff;
+    font-weight: 500;
+}
+
+
+/* #calendrier-jour */
+
+#calendrier-jour {
+    background-color: #fff;
+    padding-right: 54px;
+    padding-left: 54px;
+    padding-bottom: 40px;
+    padding-top: 40px;
+    margin-bottom: 30px;
+}
+
+#calendrier-jour a {
+    color: #3a5199;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#calendrier-jour a:hover {
+    color: #302f33;
+    text-decoration: underline;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#calendrier-jour h2 {
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #0c2653;
+    margin: auto;
+    text-align: center;
+    padding-bottom: 18px;
+}
+
+#calendrier-jour ul {
+    font-size: 13px;
+    list-style-type: none;
+    font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#calendrier-jour td {
+    list-style-type: none;
+    font: 200 15px/1.5 Helvetica, Verdana, sans-serif;
+    margin-bottom: 5px;
+}
+
+#calendrier-jour table {
+    margin:auto;
+}
+
+#calendrier-jour form {
+    background-color: #FFF;
+    padding: 10px;
+    width: 480px;
+    margin-top: 20px;
+    margin-left: auto;
+    text-align: center;
+    margin-right: auto;
+}
+
+#calendrier-jour fieldset {
+    padding: 0 20px 20px 20px;
+    margin-bottom: 10px;
+    border: 1px solid #3a5199;
+}
+
+#calendrier-jour legend {
+    color: #3a5199;
+    font-weight: bold;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#calendrier-jour label {
+    margin-top: 10px;
+    display: block;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+#calendrier-jour label.inline {
+    display: inline;
+    margin-right: 50px;
+}
+
+#calendrier-jour input {
+    padding: 3px;
+    width: 200px;
+    box-shadow: 1px 1px 2px #f9f9f9 inset;
+    background-color: #fffffe;
+}
+
+#calendrier-jour input[type=submit] {
+    width: 100px;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+#calendrier-jour input[type=reset] {
+    width: 100px;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+
+/* #liste-matricule liste des mois */
+
+#liste-matricule {
+    background-color: #fff;
+    padding-right: 54px;
+    padding-left: 54px;
+    padding-bottom: 40px;
+    padding-top: 40px;
+    margin-bottom: 30px;
+}
+
+#liste-matricule a {
+    color: #3a5199;
+}
+
+#liste-matricule a:hover {
+    color: #302f33;
+    text-decoration: underline;
+}
+
+#liste-matricule p {
+    font-family: "Georgia", Arial, serif;
+    font-size: 16px;
+    color: #302f33;
+    font-style: italic;
+}
+
+
+/* #tableau = calendrier */
+
+#tableau {
+    background-color: #302f33;
+    margin: auto;
+    padding-left: 30px;
+    padding-bottom: 30px;
+    padding-top: 30px;
+    padding-right: 30px;
+    text-align: center;
+    font-size: 13px;
+}
+
+#tableau p {
+    font-family: "Georgia", Arial, serif;
+    font-size: 11px;
+    color:#94999c;
+}
+
+#tableau a {
+    font-family: "Georgia", Arial, serif;
+    font-size: 11px;
+    color: #8cb1ec;
+    text-transform: none;
+    font-weight: normal;
+}
+#tableau a:hover {
+    font-family: "Georgia", Arial, serif;
+    font-size: 11px;
+    color:#fff;
+    text-decoration:underline;
+    text-transform:none;
+    font-weight: 0;
+
+}
+
+#tableau table {
+    margin: auto;
+}
+
+
+
+
+#tableau th {
+    width: 130px;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 16px;
+    color: #fff;
+    margin: auto;
+    font-weight: 400;
+    border-bottom: 1px dashed #4f4d52;
+    border-top: 1px dashed #4f4d52;
+    letter-spacing: 2px;
+    border-left: 1px dashed #4f4d52;
+    border-right: 1px dashed #4f4d52;
+}
+
+
+#tableau td {
+    color: #fff;
+    border-bottom: 1px dashed #4f4d52;
+    border-right: 1px dashed #4f4d52;
+    border-left: 1px dashed #4f4d52;
+    padding-top: 15px;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-bottom: 15px;
+        font-size: 16px;
+}
+
+
+
+
+
+/* #erreur404 */
+
+#erreur404 a {
+    color: #0d2652;
+}
+
+#erreur404 a:hover {
+    color: #bc3368;
+    text-decoration: underline;
+}
+
+#erreur404 p {
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: bold;
+}
