@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+{% block content %}
+<!-- Formulaire -->
+    <div id="inscription">
+        <form action="/inscription" method="POST">
+            <h1>Inscription</h1>
+            <p>
+                <input id="nom" name="nom" type="text" placeholder="Nom" />
+                <input id="prenom" name="prenom" type="text" placeholder="Prénom"/>
+                <input id="email" name="email" type="email" placeholder="E-mail"/>
+                <input id="mdp" name="mdp" type="password" placeholder="Mot de passe"/>
+                <input id="tel" name="tel" type="tel" placeholder="Numéro de téléphone"/>
+                <input id="addr" name="addr" type="text" placeholder="Adresse"/>
+                <input id="ville" name="ville" type="text" placeholder="Ville"/>
+                <input id="CP" name="CP" type="text" placeholder="Code postal"/>
+                <br/> 
+
+                {% if error %}
+                <p style="color:#F03; font-size:10px;">Tous les champs sont obligatoires.</p>
+                {% elif wrong %}
+                <p style="color:#F03; font-size:10px;">Code postal incorrect</p>
+                {% elif email%}
+                <p style="color:#F03; font-size:10px;">L'email existe déjà</p>
+                {% endif %}
+            </p>
+            <p class="login-button">
+                <input type="submit" name="Entrez" value="S'inscrire" id="" />
+            </p>
+        </form>
+    </div><!-- #inscription-->
+
+
+{% endblock %}

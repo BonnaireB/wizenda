@@ -7,9 +7,13 @@ from flask import g
 from flask import redirect
 from flask import make_response
 from flask import url_for
+from flask import session
 from .database import Database
 from .mail import *
-from .objets import *
+import re
+import hashlib
+import uuid
+# from .objets import *
 
 app = Flask(__name__, static_folder="static")
 
@@ -30,64 +34,139 @@ def close_connection(exception):
 
 @app.route('/')
 def front_page():
-    return render_template('form-index.html')
+    return render_template('index.html')
 
 
-# Récupère les données du formulaire et redirige l'utilisateur a aujourd'hui
+# Récupère les données de connexion et redirige l'utilisateur a l'index
 @app.route('/', methods=["POST"])
-def calendrier():
-    return response
+def connexion():
+    email = request.form["email"]
+    mdp = request.form["mot_de_passe"]
+
+    if email == "" or mdp == "":
+        return redirect("/authentification")
+
+# Si le mail n'existe pas
+        mail = get_db().get_login_info(email)
+        if mail is None:
+            return render_template(
+                "authentification.html",
+                                 mail="mail n'existe pas")
+
+    # On verifie si le mail correspond au mot de passe
+        salt = mail[0]
+        hashed_password = hashlib.sha512(str(mdp + salt).encode("utf-8")).hexdigest()
+        if hashed_password == mail[1]:
+            # Accès autorisé
+            id_session = uuid.uuid4().hex
+            get_db().save_session(id_session, email)
+            session["id"] = id_session
+            return redirect("/")
+        # Si le mot de passe ne correspond pas, on recommence    
+        else:
+            return redirect('/authentification')
 
 
-# Fonction pour se deconnecter
-@app.route('/offline')
-def offline():
-    response = make_response(redirect(url_for('front_page')))
-    response.set_cookie('user_matricule', expires=0)
-    return response
+
+# Redirige vers une page de connexion sur le site
+@app.route('/authentification', methods=["GET", "POST"])
+def authentification():
+    if request.method == "GET":
+        return render_template("authentification.html")
+    else: 
+        email = request.form["email"]
+        mdp = request.form["mot_de_passe"]
+
+        if email == "" or mdp == "":
+            return render_template(
+                "authentification.html",
+                                 champs="tous champs obligatoires")
 
 
-# Modifie et ajoute des projets et des heures
-@app.route('/<matricule>/<date_du_jour>', methods=["POST"])
-def ajout_modif(matricule, date_du_jour):
-    return response
+    # Si le mail n'existe pas
+        mail = get_db().get_login_info(email)
+        if mail is None:
+            return render_template(
+                "authentification.html",
+                                 mail="mail n'existe pas")
+
+    # On verifie si le mail correspond au mot de passe
+        salt = mail[0]
+        hashed_password = hashlib.sha512(str(mdp + salt).encode("utf-8")).hexdigest()
+        if hashed_password == mail[1]:
+            # Accès autorisé
+            id_session = uuid.uuid4().hex
+            get_db().save_session(id_session, email)
+            session["id"] = id_session
+            return redirect("/")
+        # Si le mot de passe ne correspond pas, on recommence    
+        else:
+            return render_template(
+                "authentification.html",
+                                 mdp="mdp incorrect")
 
 
-# Supprime un projet existant
-@app.route('/supprimer_projet/<matricule>/<date_du_jour>')
-def form_projet(matricule, date_du_jour):
-    return render_template()
+
+# Route qui permet l'inscription d'un nouvel utilisateur
+@app.route('/inscription', methods=["GET", "POST"])
+def inscription():
+    if request.method == "GET":
+        return render_template("inscription.html")
+    else: 
+        # On recupere toutes les donnees
+        nom = request.form["nom"]
+        prenom = request.form["prenom"]
+        email = request.form["email"]
+        mdp = request.form["mdp"]
+        num_tel = request.form["tel"]
+        adresse = request.form["addr"]
+        ville = request.form["ville"]
+        cp = request.form["CP"]
+
+        # On se connecte a la base de donnees
+        db = get_db()        
+        verification_email = db.verification_email_existant(email)
 
 
-# Redirige l'user lorsque la suppression est faite
-@app.route('/supprimer/<matricule>/<date_du_jour>', methods=["POST"])
-def suppression(matricule, date_du_jour):
-    response = make_response(
-            redirect(url_for()))
-    return response
+        regex_cp = r'[A-Za-z0-9]{6}'
+
+        # Si des champs sont vides
+        if (nom == "" or prenom == "" or email == "" or mdp == ""
+            or  num_tel == "" or adresse == "" or ville == "" or cp == ""):
+            return render_template("inscription.html",
+                                error="Tous les champs sont obligatoires.")
+        elif re.match(regex_cp, cp) is None:
+            return render_template("inscription.html", wrong="Wrong") 
+
+        if (verification_email == email):
+            return render_template("inscription.html", email="mail existe deja") 
 
 
-# Affiche le jour, les projets et les heures associées
-@app.route('/<matricule>/<date_du_jour>')
-def calendrier_jour(matricule, date_du_jour):
-        return render_template()
+        db.create_user(nom, prenom, email, mdp, num_tel, adresse, ville, cp) 
+
+        return redirect("/confirmation")
 
 
-# Affiche le calendrier du mois
-@app.route('/<matricule>/overview/<mois>')
-def calendrier_mois(matricule, mois):
-    return render_template()
+# Route qui confirme l'inscription d'un utilisateur
+@app.route('/confirmation')
+def confirmation():
+    return render_template("confirmation.html")
 
 
-# # Affiche la liste des mois ou il y a des heures
-# @app.route('/<matricule>')
-# def matricule_page(matricule):
-#         response = make_response(render_template())
-#         response.set_cookie("matricule_actuel", matricule)
-#         return response
+
+
+
+
+
+
 
 
 # La page 404.html en cas d'erreur
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+
+
+
+app.secret_key = "(*&*&322387he738220)(*(*22347657"

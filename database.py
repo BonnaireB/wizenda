@@ -1,7 +1,7 @@
 # PHOUANGSY SOPHIE PHOS06609507
 # BONNAIRE BENJAMIN BONB03049706
 import sqlite3
-import .objets
+# import .objets
 import hashlib
 import uuid
 
@@ -11,7 +11,7 @@ class Database:
 
     def get_connexion(self):
         if self.connexion is None:
-            self.connexion = sqlite3.connect('./db/tp1.db')
+            self.connexion = sqlite3.connect('./db/tp2.db')
         return self.connexion
 
     def deconnexion(self):
@@ -21,11 +21,11 @@ class Database:
     def insert_animal1(self,animal):
         insert_animal(animal.nom, animal.type, animal.race, animal.age, animal.descrip)
 
-    def insert_animal(self, nom, type, race, age, descrip):
+    def insert_animal(self, nom, type, race, age, description):
         cursor = self.get_connexion().cursor()
         cursor.execute(("INSERT INTO animal (nom, type"
-                       ",race, age,descrip,photo) VALUES (?, ?, ?, ?, ?, ?)"),
-                       (nom, date, race, age, descrip, photo.read()))
+                       ",race, age, description,photo) VALUES (?, ?, ?, ?, ?, ?)"),
+                       (nom, date, race, age, description, photo.read()))
         self.get_connexion().commit()
     
     def insert_user1(self, usr):
@@ -39,3 +39,51 @@ class Database:
                        ",email, mdp) VALUES (?, ?, ?, ?)"),
                        (nom, prenom, email, hashed_password))
         self.get_connexion().commit()
+
+
+
+
+# Creer un utilisateur
+    def create_user(self, nom, prenom, email, mdp, tel, adresse, ville, cp):
+        salt = uuid.uuid4().hex
+        hashed_password = hashlib.sha512(str(mdp + salt).encode("utf-8")).hexdigest()
+
+        cursor = self.get_connexion().cursor()
+        cursor.execute(("INSERT INTO utilisateur (nom, prenom, email, salt, hash,"
+                       "num_de_tel, adresse, ville, cp) VALUES (?, ?, ?, ?, ?,"
+                       "?, ?, ?, ?)"), (nom, prenom, email, salt,hashed_password, 
+                                        tel, adresse, ville, cp,))
+        self.get_connexion().commit()
+
+# Savoir si l'email existe deja dans la base de donnees 
+    def verification_email_existant(self, email):
+        cursor = self.get_connexion().cursor()
+        cursor.execute(("SELECT email "
+                        "FROM utilisateur WHERE email = ?"), (email,))
+        mail = cursor.fetchone()
+        if mail is None:
+            return None
+        else:
+            return mail[0]
+
+# Methode pour authentifier un utilisateur existant    
+    def get_login_info(self, email):
+        cursor = self.get_connexion().cursor()
+        cursor.execute(("SELECT salt, hash FROM utilisateur WHERE email=?"),
+                       (email,))
+        user = cursor.fetchone()
+        if user is None:
+            return None
+        else:
+            return user[0], user[1]
+
+
+# Inserer une session courante 
+    def save_session(self, id_session, email):
+        cursor = self.get_connexion().cursor()
+        cursor.execute(("INSERT INTO Sessions(id_session, email) "
+                            "VALUES(?, ?)"), (id_session, email))
+        self.get_connexion().commit()            
+
+
+    #def insert_
