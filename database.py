@@ -39,5 +39,3 @@ class Database:
                        ",email, mdp) VALUES (?, ?, ?, ?)"),
                        (nom, prenom, email, hashed_password))
         self.get_connexion().commit()
-    
-    def insert_
