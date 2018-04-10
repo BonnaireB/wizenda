@@ -9,7 +9,7 @@ from flask import make_response
 from flask import url_for
 from .database import Database
 from .mail import *
-from .objets import *
+# from .objets import *
 
 app = Flask(__name__, static_folder="static")
 
@@ -30,13 +30,21 @@ def close_connection(exception):
 
 @app.route('/')
 def front_page():
-    return render_template('form-index.html')
+    return render_template('index.html')
 
 
 # Récupère les données du formulaire et redirige l'utilisateur a aujourd'hui
 @app.route('/', methods=["POST"])
 def calendrier():
     return response
+
+
+@app.route('/inscription', methods=["GET", "POST"])
+def inscription():
+    if request.method == "GET":
+        return render_template("inscription.html")
+    else: 
+        return render_template('index.html')
 
 
 # Fonction pour se deconnecter

@@ -1,7 +1,7 @@
 # PHOUANGSY SOPHIE PHOS06609507
 # BONNAIRE BENJAMIN BONB03049706
 import sqlite3
-import .objets
+# import .objets
 import hashlib
 import uuid
 
@@ -24,7 +24,7 @@ class Database:
     def insert_animal(self, nom, type, race, age, descrip):
         cursor = self.get_connexion().cursor()
         cursor.execute(("INSERT INTO animal (nom, type"
-                       ",race, age,descrip,photo) VALUES (?, ?, ?, ?, ?, ?)"),
+                       ",race, age, descrip,photo) VALUES (?, ?, ?, ?, ?, ?)"),
                        (nom, date, race, age, descrip, photo.read()))
         self.get_connexion().commit()
     
@@ -40,4 +40,4 @@ class Database:
                        (nom, prenom, email, hashed_password))
         self.get_connexion().commit()
     
-    def insert_
+    #def insert_

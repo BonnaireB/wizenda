@@ -3,7 +3,8 @@ body {
     margin: auto;
     font-family: "Verdana", Arial, sans-serif;
     font-size: 12px;
-    background-color: #d6d7d2;
+//    background-color: #d6d7d2;
+    background-color: #fff;
 }
 
 a {
@@ -40,6 +41,9 @@ em {
 
 
 /* Header */
+#head {
+    margin-top:50px;
+}
 
 header {
     background-color: #2F2E33;
@@ -63,6 +67,51 @@ header h2 {
     text-transform: uppercase;
     font-family: Oswald, sans-serif;
     font-size: 20px;
+}
+
+
+/* #connexion */
+#connexion {
+    width:1000px;
+    position:absolute;
+    font-size:11px;
+    color : #fff;
+    float:right;
+    margin-left:10px;
+}
+
+
+#connexion div {
+     float: left;
+     margin-right: 5px;
+     margin-bottom: 5px;
+}
+
+#seConnecter {
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    border: 1px solid #fff;
+    color: #302f33;
+    box-shadow: 1px 1px 3px #8f8c8c;
+    font-size: 11px;
+    text-transform:lowercase;
+}
+
+#inp {
+    height:10px;
+    font-size:10px;
+}
+
+#connexion label {
+    font-size:11px;
+    text-transform:lowercase;
+}
+
+#connexion a {
+    letter-spacing: 1px;
+    font-size:11px;
+    color: #fff;
+    text-transform:lowercase;
 }
 
 

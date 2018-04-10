@@ -1,0 +1,27 @@
+{% extends "index.html" %}
+{% block content %}
+<!-- Formulaire -->
+    <div id="register">
+        <form action="/" method="POST">
+            <h1 id="registerh1">Connexion</h1>
+            <p>
+                <label for="matricule" class="matricule"> Matricule </label>
+                <br/>
+                <input id="matricule" name="matricule" type="text" />
+                <br/> 
+                {% if error %}
+                <p style="color:#F03; font-size:10px;">Matricule obligatoire</p>
+                {% elif wrong %}
+                <p style="color:#F03; font-size:10px;">Matricule obligatoire sous cette forme : XXX-99</p>
+                {% elif wrongMatricule %}
+                <p style="color:#F03; font-size:10px;">Matricule inexistant</p>
+                {% endif %}
+            </p>
+            <p class="login-button">
+                <input type="submit" name="Entrez" value="GO" id="submitB" />
+            </p>
+        </form>
+    </div><!-- #REGISTER-->
+
+
+{% endblock %}

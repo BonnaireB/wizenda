@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <title> Kijijanimals </title>
+    <meta charset="UTF-8">
+    <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet"  >
+</head>
+
+<body >
+
+
+    <header>
+        <div id="connexion"> 
+            
+            <form action="" method="GET">
+                <div> <label for="email" class="email"> E-mail : </label> </div>
+                <div> <input id="inp" name="email" type="text" /> </div>
+
+                <div> <label for="motDePasse" class="motDePasse"> Mot de passe : </label></div>
+                <div> <input id="inp" name="motDePasse" type="text" /> </div>
+
+                <div> 
+                <input type="submit" name="seConnecter" value="Se connecter" id="seConnecter" />
+             </div>
+                
+            </form>
+
+            <div> &nbsp;|&nbsp; <a href="/inscription"> Pas encore inscrit?</a> </div> 
+        </div>
+
+        <div id="head">
+        <h1> Kijijanimals </h1>
+        <h2> Le meilleur moyen de se faire de nouveaux amis </h2>
+        </div>
+        
+    </header>
+
+<div id="content">
+
+
+    {% block content %}{% endblock %}
+
+
+</div> <!-- #content -->
+   
+    <footer>
+
+      <p>
+        © 2018  — Designed By 
+        <b>Sophie Phouangsy</b> and <b>Benjamin Bonnaire</b> dans le cadre d'un projet pour le cours INF3005
+      </p>
+    </footer>
+</body>
+
+</html>
