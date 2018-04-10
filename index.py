@@ -9,6 +9,7 @@ from flask import make_response
 from flask import url_for
 from .database import Database
 from .mail import *
+import re
 # from .objets import *
 
 app = Flask(__name__, static_folder="static")
@@ -33,18 +34,55 @@ def front_page():
     return render_template('index.html')
 
 
-# Récupère les données du formulaire et redirige l'utilisateur a aujourd'hui
+# Récupère les données de connexion et redirige l'utilisateur a l'index
 @app.route('/', methods=["POST"])
-def calendrier():
+def authentification():
     return response
 
-
+# Route qui permet l'inscription d'un nouvel utilisateur
 @app.route('/inscription', methods=["GET", "POST"])
 def inscription():
     if request.method == "GET":
         return render_template("inscription.html")
     else: 
-        return render_template('index.html')
+        # On recupere toutes les donnees
+        nom = request.form["nom"]
+        prenom = request.form["prenom"]
+        email = request.form["email"]
+        mdp = request.form["mdp"]
+        num_tel = request.form["tel"]
+        adresse = request.form["addr"]
+        ville = request.form["ville"]
+        cp = request.form["CP"]
+
+        # On se connecte a la base de donnees
+        db = get_db()        
+        verification_email = db.verification_email_existant(email)
+
+
+        regex_cp = r'[A-Za-z0-9]{6}'
+
+        # Si des champs sont vides
+        if (nom == "" or prenom == "" or email == "" or mdp == ""
+            or  num_tel == "" or adresse == "" or ville == "" or cp == ""):
+            return render_template("inscription.html",
+                                error="Tous les champs sont obligatoires.")
+        elif re.match(regex_cp, cp) is None:
+            return render_template("inscription.html", wrong="Wrong") 
+
+        if (verification_email == email):
+            return render_template("inscription.html", email="mail existe deja") 
+
+
+        db.create_user(nom, prenom, email, mdp, num_tel, adresse, ville, cp) 
+
+        return redirect("/confirmation")
+
+
+# Route qui confirme l'inscription d'un utilisateur
+@app.route('/confirmation')
+def confirmation():
+    return render_template("confirmation.html")
 
 
 # Fonction pour se deconnecter
@@ -86,13 +124,6 @@ def calendrier_jour(matricule, date_du_jour):
 def calendrier_mois(matricule, mois):
     return render_template()
 
-
-# # Affiche la liste des mois ou il y a des heures
-# @app.route('/<matricule>')
-# def matricule_page(matricule):
-#         response = make_response(render_template())
-#         response.set_cookie("matricule_actuel", matricule)
-#         return response
 
 
 # La page 404.html en cas d'erreur
