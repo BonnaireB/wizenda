@@ -13,9 +13,16 @@ create table Utilisateur (
   nom varchar(25) NOT NULL,
   prenom varchar(30) NOT NULL,
   email varchar(50) NOT NULL,
-  mdp varchar(512) NOT NULL,
+  salt varchar(32) NOT NULL,
+  hash varchar(128) NOT NULL,
   num_de_tel varchar(20) NOT NULL,
   adresse varchar(50) NOT NULL,
   ville varchar(50) NOT NULL,
   cp varchar(10) NOT NULL
+);
+
+create table Sessions (
+  id integer primary key AUTOINCREMENT,
+  id_session varchar(32) NOT NULL,
+  email varchar(25) NOT NULL
 );

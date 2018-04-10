@@ -114,6 +114,86 @@ header h2 {
     text-transform:lowercase;
 }
 
+#connexion a:hover {
+    letter-spacing: 1px;
+    font-size:11px;
+    color: #d6d7d2;
+    text-transform:lowercase;
+}
+
+
+
+/* authentification */
+
+.login-page {
+  width: 360px;
+  margin: auto;
+}
+.form {
+  position: relative;
+  z-index: 1;
+  background: #ffffff;
+  max-width: 360px;
+  margin: 0 auto 100px;
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1), 0 5px 5px 0 rgba(255, 239, 239, 0.2);
+}
+.login-form input[type="text"] {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #d6d7d2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+.login-form input[type="password"] {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #d6d7d2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.form button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #3a5199;
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+.form button:hover,.form button:active,.form button:focus {
+  background: #d7d8d2;
+  color:#3a5199;
+}
+.form .message {
+  margin: 15px 0 0;
+  color: #3a5199;
+  font-size: 11px;
+}
+.form .message a {
+  color: #3a5199;
+  text-decoration: none;
+  text-transform:none;
+  font-size:11px;
+}
+.form .register-form {
+  display: none;
+}
 
 /* Formulaire */
 
@@ -135,8 +215,7 @@ header h2 {
   text-transform:uppercase;
 }
 
-#inscription input[type="text"],
-input[type="password"], input[type="email"], input[type="tel"] {
+#inscription input {
   display: block;
   box-sizing: border-box;
   margin-bottom: 20px;
@@ -151,8 +230,7 @@ input[type="password"], input[type="email"], input[type="tel"] {
   transition: 0.2s ease;
 }
 
-#inscription input[type="text"]:focus,
-input[type="password"]:focus, input[type="email"]:focus, input[type="tel"]:focus {
+#inscription input:focus{
   border-bottom: 2px solid #3a5199;
   color: #3a5199;
   transition: 0.2s ease;

@@ -49,9 +49,9 @@ class Database:
         hashed_password = hashlib.sha512(str(mdp + salt).encode("utf-8")).hexdigest()
 
         cursor = self.get_connexion().cursor()
-        cursor.execute(("INSERT INTO utilisateur (nom, prenom, email, mdp,"
-                       "num_de_tel, adresse, ville, cp) VALUES (?, ?, ?, ?,"
-                       "?, ?, ?, ?)"), (nom, prenom, email, hashed_password, 
+        cursor.execute(("INSERT INTO utilisateur (nom, prenom, email, salt, hash,"
+                       "num_de_tel, adresse, ville, cp) VALUES (?, ?, ?, ?, ?,"
+                       "?, ?, ?, ?)"), (nom, prenom, email, salt,hashed_password, 
                                         tel, adresse, ville, cp,))
         self.get_connexion().commit()
 
@@ -66,5 +66,24 @@ class Database:
         else:
             return mail[0]
 
-    
+# Methode pour authentifier un utilisateur existant    
+    def get_login_info(self, email):
+        cursor = self.get_connexion().cursor()
+        cursor.execute(("SELECT salt, hash FROM utilisateur WHERE email=?"),
+                       (email,))
+        user = cursor.fetchone()
+        if user is None:
+            return None
+        else:
+            return user[0], user[1]
+
+
+# Inserer une session courante 
+    def save_session(self, id_session, email):
+        cursor = self.get_connexion().cursor()
+        cursor.execute(("INSERT INTO Sessions(id_session, email) "
+                            "VALUES(?, ?)"), (id_session, email))
+        self.get_connexion().commit()            
+
+
     #def insert_
