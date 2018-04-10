@@ -117,6 +117,11 @@ header h2 {
 
 /* Formulaire */
 
+#inscription {
+    background-color: #d6d7d2;
+    padding:20px;
+}
+
 #register {
     font-family: Arial, Helvetica, sans-serif, sans-serif;
     margin: auto;
