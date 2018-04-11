@@ -9,14 +9,18 @@ from flask import make_response
 from flask import url_for
 from flask import session
 from .database import Database
+from .objets import *
 from .mail import *
 import re
 import hashlib
 import uuid
+from random import *
 # from .objets import *
 
 app = Flask(__name__, static_folder="static")
 
+
+    
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -34,7 +38,16 @@ def close_connection(exception):
 
 @app.route('/')
 def front_page():
-    return render_template('index.html')
+    animaux_raw = get_db().get_animals()
+    liste_aleatoire = []
+    for x in range(0,5):
+        index = randrange( len(animaux_raw) - 1)
+        animal = animaux_raw[index]
+        animaux_raw[index] = animaux_raw[-1]
+        del animaux_raw[-1]
+        liste_aleatoire.append(animal)
+    liste_animaux = Animal.init_list(liste_aleatoire)
+    return render_template('index.html',cinq=liste_animaux)
 
 
 # Récupère les données de connexion et redirige l'utilisateur a l'index
@@ -161,10 +174,10 @@ def confirmation():
 
 
 
-# La page 404.html en cas d'erreur
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html'), 404
+# # La page 404.html en cas d'erreur
+# @app.errorhandler(404)
+# def page_not_found(e):
+#     return render_template('404.html'), 404
 
 
 

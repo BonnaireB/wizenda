@@ -38,7 +38,14 @@
 
 <div id="content">
 
+    {% for n in cinq %}
+    <div class="animal-frontpage">
+        <h1 class="animal-frontpage-nom"> {{ n.nom }} </h1>
+        <h2 class="animal-frontpage-type"> {{ n.type_animal }} {{n.race}}</h2>
 
+
+    </div>
+    {% endfor %}
     {% block content %}{% endblock %}
 
 

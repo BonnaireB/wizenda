@@ -19,13 +19,13 @@ class Database:
             self.connexion.close()
 
     def insert_animal1(self,animal):
-        insert_animal(animal.nom, animal.type, animal.race, animal.age, animal.descrip)
+        insert_animal(animal.nom, animal.type, animal.race, animal.age, animal.email_proprio, animal.descrip)
 
-    def insert_animal(self, nom, type, race, age, description):
+    def insert_animal(self, nom, type, race, age,email, description):
         cursor = self.get_connexion().cursor()
         cursor.execute(("INSERT INTO animal (nom, type"
-                       ",race, age, description,photo) VALUES (?, ?, ?, ?, ?, ?)"),
-                       (nom, date, race, age, description, photo.read()))
+                       ",race, age,email, description) VALUES (?, ?, ?, ?, ?, ?)"),
+                       (nom, date, race, age, email, description))
         self.get_connexion().commit()
     
     def insert_user1(self, usr):
@@ -87,3 +87,10 @@ class Database:
 
 
     #def insert_
+    def get_animals(self):
+        cursor = self.get_connexion().cursor()
+        cursor.execute(("SELECT * FROM Animal"))
+
+        animals = cursor.fetchall()
+        return animals
+    
