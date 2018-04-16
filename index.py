@@ -11,13 +11,14 @@ from flask import session
 from .database import Database
 from .objets import *
 from .mail import *
+from flask import jsonify
 import re
 import hashlib
 import uuid
 from random import *
 # from .objets import *
 
-app = Flask(__name__, static_folder="static")
+app = Flask(__name__, static_url_path="", static_folder="static")
 
 
     
@@ -34,7 +35,6 @@ def close_connection(exception):
     db = getattr(g, '_database', None)
     if db is not None:
         db.deconnexion()
-
 
 @app.route('/')
 def front_page():
@@ -79,7 +79,12 @@ def connexion():
         else:
             return redirect('/authentification')
 
-
+@app.route('/api/animals/', methods=["GET"])
+def liste_animaux():
+    if request.method == "GET":
+        animals = get_db().get_animals()
+        data = [{"nom": each[1],"type":each[2],"race":each[3],"age":each[4],"description":each[5],"mail_proprio":each[6], "_id": each[0]} for each in animals]
+        return jsonify(data)
 
 # Redirige vers une page de connexion sur le site
 @app.route('/authentification', methods=["GET", "POST"])
@@ -167,11 +172,23 @@ def confirmation():
 
 
 
+@app.route('/<id>')
+def page_animal(id):
+    page = get_db().get_animal_by_id(id)
+    if page is None :
+        return render_template(("404.html"))
+    else :
+        animal = Animal(page[0],page[1],page[2],page[3],page[4],page[5],page[6])
+        return render_template(("animal.html"),id=id, animal=animal)
 
 
 
 
-
+@app.route('/cinq-animaux/<recherche>')
+def cinq_animaux(recherche):
+    animaux_raw = get_db().get_recherche(recherche)
+    animaux = Animal.init_list(animaux_raw)
+    return render_template('cinq-animaux.html', animaux=animaux)
 
 
 # # La page 404.html en cas d'erreur

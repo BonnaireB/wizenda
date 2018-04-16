@@ -1,0 +1,19 @@
+{% extends "index.html" %}
+{% block content %}
+<div id="contenu">
+   {% if no_animal %}
+   <h1> Pas d'animal</h1>
+   {% endif %}
+   {% if animal %}
+   <h1> Le joli {{ animal.nom }} </h1>
+   {% endif %}
+</div>
+<!-- /matricule-->
+<div id="animal-page">
+   <u>{{animal.type_animal}}</u>
+   <u>{{animal.race}}</u>
+   <u>{{animal.age}} ANS</u>
+   <u>{{animal.description}}</u>
+</div>
+<!-- #LISTE_MATRICULE-->
+{% endblock %}

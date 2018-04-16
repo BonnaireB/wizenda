@@ -5,6 +5,7 @@
     <title> Kijijanimals </title>
     <meta charset="UTF-8">
     <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet"  >
+    <script src="{{ url_for('static', filename='javascript/script.js') }}"></script>
 </head>
 
 <body >
@@ -15,7 +16,7 @@
             
             <form action="/" method="POST">
                 <div> <label for="email" class="email"> E-mail : </label> </div>
-                <div> <input id="inp" name="email" type="text" /> </div>
+                <div> <input id="input" name="email" type="text" /> </div>
 
                 <div> <label for="mot_de_passe" class="motDePasse"> Mot de passe : </label></div>
                 <div> <input id="inp" name="mot_de_passe" type="password" /> </div>
@@ -33,14 +34,18 @@
         <a href="/"><h1> Kijijanimals </h1></a>
         <h2> Le meilleur moyen de se faire de nouveaux amis </h2>
         </div>
-        
+        <div class="recherche">
+                <label>Recherche</label>
+                <input type="text" name="recherche" id="recherche">
+                <input type="button" name="envoyer" onclick="rechercher()">
+        </div>
     </header>
 
 <div id="content">
 
     {% for n in cinq %}
     <div class="animal-frontpage">
-        <h1 class="animal-frontpage-nom"> {{ n.nom }} </h1>
+        <a class="animal-frontpage-nom" href="{{ url_for('page_animal', id=n.id) }}"> {{ n.nom }} </a>
         <h2 class="animal-frontpage-type"> {{ n.type_animal }} {{n.race}}</h2>
 
 
