@@ -15,7 +15,7 @@
         <div id="connexion"> 
             
             {% if username %}
-            <div> Bonjour {{username}} &nbsp; | &nbsp; <a href="">Mon compte</a> &nbsp; | &nbsp; <a href="/logout">Déconnexion</a> </div>
+            <div> Bonjour {{username}} &nbsp; | &nbsp; <a href="/mes-informations">Mon compte</a> &nbsp; | &nbsp; <a href="/adoption">Mettre en adoption</a> &nbsp; | &nbsp; <a href="/logout">Déconnexion</a> </div>
 
             {% else %}
             <form action="/" method="POST">
@@ -31,7 +31,7 @@
                 
             </form>
 
-            <div> &nbsp; | &nbsp; <a href="/inscription"> Pas encore inscrit?</a> </div>
+            <div> &nbsp; | &nbsp; <a href="/inscription"> Pas encore inscrit?</a> &nbsp; | &nbsp; <a href="/adoption"> Mettre en adoption </a> </div>
 
             {% endif %} 
         </div>
@@ -40,10 +40,11 @@
         <a href="/"><h1> Kijijanimals </h1></a>
         <h2> Le meilleur moyen de se faire de nouveaux amis </h2>
         </div>
+
         <div class="recherche">
                 <label>Recherche</label>
                 <input type="text" name="recherche" id="recherche">
-                <input type="button" name="envoyer" onclick="rechercher()">
+                <input type="button" value="OK" name="envoyer" onclick="rechercher()">
         </div>
     </header>
 

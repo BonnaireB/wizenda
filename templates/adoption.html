@@ -1,0 +1,27 @@
+{% extends "index.html" %}
+{% block content %}
+<!-- Formulaire-animal -->
+    <div id="inscription">
+        <form action="/adoption" method="POST">
+            <h1>Ajouter un animal pour adoption</h1>
+            <p>
+                <input id="nom_animal" name="nom_animal" type="text" placeholder="Nom de l'animal*" />
+                <input id="type" name="type_animal" type="text" placeholder="Type d'animal*"/>
+                <input id="race" name="race" type="text" placeholder="Race*"/>
+                <input id="age" name="age" type="number" placeholder="Age*"/>
+                <input id="description" name="description" type="textarea" placeholder="Description*"/>
+                <span>Ajouter une photo</span><input type="file" name="photo" accept=".png, .jpg, .jpeg"/>
+                <br/> 
+
+                {% if error %}
+                <p style="color:#F03; font-size:10px;">Tous les champs étoilés sont obligatoires.</p>
+                {% endif %}
+            </p>
+            <p class="login-button">
+                <input type="submit" name="Adopter" value="Faire adopter!" id="" />
+            </p>
+        </form>
+    </div><!-- #inscription-->
+
+
+{% endblock %}
