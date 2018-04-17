@@ -10,6 +10,11 @@ create table Animal (
   age integer NOT NULL,
   description text NOT NULL,
   mail_proprio text NOT NULL,
+  image_id varchar(32)
+);
+
+create table Image (
+  id varchar(32) primary key,
   image blob
 );
 
@@ -40,6 +45,7 @@ insert into Animal (nom_animal,type_animal,race,age,description,mail_proprio) va
 insert into Animal (nom_animal,type_animal,race,age,description,mail_proprio) values ("Mario","Tortue","muette",119,"timide sanguinaire calin myope male", "nintendoinf3005@gmail.com");
 insert into Animal (nom_animal,type_animal,race,age,description,mail_proprio) values ("Sonic","Herisson","Piquant",44,"vieux Herisson Grincheux sublime male", "segainf3005@gmail.com");
 
+insert into Utilisateur (nom,prenom,email,salt,hash,num_de_tel,adresse,ville,cp) values ("Sophie","Ph","so.phouangsy@gmail.com","73ef09812fa2475cbd063b19cdc230da","3c1afccc289e53dd53922ef100d5b2e96d00036f876583e538653fd2b4bd25e00ce93dc49c926ff6121631cbc2198734bcd6853687170f6fdfb3237de79bf66c","0648244857","2789 Rue Gamelin", "Montreal", "H4C 3X2");
 insert into Utilisateur (nom,prenom,email,salt,hash,num_de_tel,adresse,ville,cp) values ("Marcelin","Victor","victorinf3005@gmail.com","x3411234sbhbd","s3443b3451n2342b121","514-555 5555","2789 Rue Gamelin", "Montreal", "H4C 3X2");
 insert into Utilisateur (nom,prenom,email,salt,hash,num_de_tel,adresse,ville,cp) values ("Marcelin","Marcin","marcinf3005@gmail.com","x3411234sbhbd","s3443b3451n2342b121","514-555 5555","2789 Rue Gamelin", "Montreal", "H4C 3X2");
 insert into Utilisateur (nom,prenom,email,salt,hash,num_de_tel,adresse,ville,cp) values ("Marcelin","Mathieu","mathieuinf3005@gmail.com","x3411234sbhbd","s3443b3451n2342b121","514-555 5555","2789 Rue Gamelin", "Montreal", "H4C 3X2");

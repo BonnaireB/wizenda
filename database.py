@@ -21,22 +21,22 @@ class Database:
     #def insert_animal1(self,animal):
      #   insert_animal(animal.nom, animal.type, animal.race, animal.age, animal.email_proprio, animal.descrip)
 
-    def insert_animal_photo(self, nom, type_animal, race, age, email, description, image):
+    def insert_animal_photo(self, image_id, image):
         cursor = self.get_connexion()
-        cursor.execute("INSERT INTO Animal(nom_animal, type_animal,"
-                        "race, age, mail_proprio, description, image) VALUES"
-                        "(?, ?, ?, ?, ?, ?, ?)", [nom, type_animal, race,
-                                                  age, email, description,
-                                                  sqlite3.Binary(image.read())])
+        cursor.execute("INSERT INTO Image(id, image)"
+                        " VALUES (?, ?)", [image_id,
+                                           sqlite3.Binary(image.read())])
         cursor.commit()
     
-    def insert_animal(self, nom, type_animal, race, age, email, description):
+    def insert_animal(self, nom, type_animal, race, age, email, description, image_id):
         cursor = self.get_connexion()
         cursor.execute(("INSERT INTO Animal(nom_animal, type_animal,"
-                        "race, age, mail_proprio, description) VALUES"
-                        "(?, ?, ?, ?, ?, ?)"), (nom, type_animal, race,
-                                                  age, email, description))
+                        "race, age, mail_proprio, description, image_id) VALUES"
+                        "(?, ?, ?, ?, ?, ?, ?)"), (nom, type_animal, race,
+                                                  age, email, description, image_id))
         cursor.commit()    
+
+
 
     def insert_user1(self, usr):
         insert_user(usr.nom, usr.prenom, usr.email, user.motDePasse)
@@ -153,6 +153,9 @@ class Database:
         else:
             return animal
         return animals
+
+
+
     
     def get_recherche(self, recherche):
         format_recherche = recherche.lower().split()

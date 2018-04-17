@@ -2,7 +2,7 @@
 {% block content %}
 <!-- Formulaire-animal -->
     <div id="inscription">
-        <form action="/adoption" method="POST">
+        <form action="/adoption" method="POST" enctype="multipart/form-data">
             <h1>Ajouter un animal pour adoption</h1>
             <p>
                 <input id="nom_animal" name="nom_animal" type="text" placeholder="Nom de l'animal*" />

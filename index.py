@@ -186,10 +186,12 @@ def adoption():
         race = request.form["race"]
         age = request.form["age"]
         description = request.form["description"]
+        
         image = None
-
+        image_id = None
         if "photo" in request.files:
             image = request.files["photo"]
+            image_id = str(uuid.uuid4().hex)
 
         # Si des champs sont vides
         if (nom_animal == "" or type_animal == "" or race== "" or age == ""
@@ -197,12 +199,13 @@ def adoption():
             return render_template("adoption.html", error="obligatoires")
 
         db = get_db()
-        if image is not None :
-            db.insert_animal_photo(nom_animal, type_animal, race, age, email, description, image)
-        else:
-            db.insert_animal(nom_animal, type_animal, race, age, email, description)
+        db.insert_animal(nom_animal, type_animal, race, age, email, description, image_id)
+        if image_id is not None :
+          db.insert_animal_photo(image_id, image)
 
-    return redirect("/confirmation")
+        id = db.get_animal_from_image_id(nom_animal, email, image_id)
+
+        return redirect("/confirmation")
 
 
 # Route qui permet l'inscription d'un nouvel utilisateur
