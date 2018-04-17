@@ -77,51 +77,24 @@ class Database:
         else:
             return user[0], user[1]
 
-# Methode pour obtenir info   
-    def get_login(self, email):
-        cursor = self.get_connexion().cursor()
-        cursor.execute(("SELECT prenom FROM Utilisateur WHERE email=?"),
-                       (email,))
-        user = cursor.fetchone()
-        if user is None:
-            return None
-        else:
-            return user[0]
-
 
 # Inserer une session courante 
-    def save_session(self, id_session, prenom, email):
-        cursor = self.get_connexion()
-        cursor.execute(("INSERT INTO Sessions(id_session, prenom, email) VALUES(?, ?, ?)"), (id_session, prenom, email))
-        self.get_connexion().commit()            
-
-    # Supprime une session
-    def delete_session(self, id_session):
-        connection = self.get_connexion()
-        connection.execute(("DELETE FROM Sessions where id_session=?"),
-                           (id_session,))
-        connection.commit()
-
-    # Regarde si une session existe deja 
-    def get_session(self, id_session):
+    def save_session(self, id_session, email):
         cursor = self.get_connexion().cursor()
-        cursor.execute(("SELECT prenom FROM Sessions where id_session=?"),
-                       (id_session,))
-        prenom = cursor.fetchone()
-        if prenom is None:
-            return None
-        else:
-            return prenom[0]
+        cursor.execute(("INSERT INTO Sessions(id_session, email) "
+                            "VALUES(?, ?)"), (id_session, email))
+        self.get_connexion().commit()            
 
 
     #def insert_
-
     def get_animals(self):
         cursor = self.get_connexion().cursor()
         cursor.execute(("SELECT * FROM Animal"))
-
         animals = cursor.fetchall()
-        return animals
+        if animals is None:
+            return None
+        else:
+            return animals
     
     def get_animal_by_id(self,id):
         cursor = self.get_connexion().cursor()

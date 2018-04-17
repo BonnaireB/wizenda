@@ -14,6 +14,10 @@
     <header>
         <div id="connexion"> 
             
+            {% if username %}
+            <div> Bonjour {{username}} &nbsp; | &nbsp; <a href="">Mon compte</a> </div>
+
+            {% else %}
             <form action="/" method="POST">
                 <div> <label for="email" class="email"> E-mail : </label> </div>
                 <div> <input id="input" name="email" type="text" /> </div>
@@ -27,7 +31,9 @@
                 
             </form>
 
-            <div> &nbsp; | &nbsp; <a href="/inscription"> Pas encore inscrit?</a> </div> 
+            <div> &nbsp; | &nbsp; <a href="/inscription"> Pas encore inscrit?</a> </div>
+
+            {% endif %} 
         </div>
 
         <div id="head">

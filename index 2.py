@@ -8,8 +8,6 @@ from flask import redirect
 from flask import make_response
 from flask import url_for
 from flask import session
-from flask import Response
-from functools import wraps
 from .database import Database
 from .objets import *
 from .mail import *
@@ -18,12 +16,12 @@ import re
 import hashlib
 import uuid
 from random import *
-
-
 # from .objets import *
 
 app = Flask(__name__, static_url_path="", static_folder="static")
 
+
+    
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -38,17 +36,14 @@ def close_connection(exception):
     if db is not None:
         db.deconnexion()
 
-
-# Affiche la page d'accueil
 @app.route('/')
 def front_page():
-    user = None
-    if "id" in session:
-        username = get_db().get_session(session["id"])
-        return render_template('index.html',username=username)
-
-    animaux_raw = get_db().get_animals()
     liste_aleatoire = []
+    animaux_raw = get_db().get_animals()
+
+    if animaux_raw is None: 
+        return render_template('index.html')
+
     for x in range(0,5):
         index = randrange( len(animaux_raw) - 1)
         animal = animaux_raw[index]
@@ -79,25 +74,21 @@ def connexion():
         salt = mail[0]
         hashed_password = hashlib.sha512(str(mdp + salt).encode("utf-8")).hexdigest()
         if hashed_password == mail[1]:
-            prenom = get_db().get_login(email)
             # Accès autorisé
             id_session = uuid.uuid4().hex
-            get_db().save_session(id_session, prenom, email)
+            get_db().save_session(id_session, email)
             session["id"] = id_session
             return redirect("/")
         # Si le mot de passe ne correspond pas, on recommence    
         else:
             return redirect('/authentification')
 
-
-# Route pour l'application API
 @app.route('/api/animals/', methods=["GET"])
 def liste_animaux():
     if request.method == "GET":
         animals = get_db().get_animals()
         data = [{"nom": each[1],"type":each[2],"race":each[3],"age":each[4],"description":each[5],"mail_proprio":each[6], "_id": each[0]} for each in animals]
         return jsonify(data)
-
 
 # Redirige vers une page de connexion sur le site
 @app.route('/authentification', methods=["GET", "POST"])
@@ -125,10 +116,9 @@ def authentification():
         salt = mail[0]
         hashed_password = hashlib.sha512(str(mdp + salt).encode("utf-8")).hexdigest()
         if hashed_password == mail[1]:
-            prenom = get_db().get_login(email)
             # Accès autorisé
             id_session = uuid.uuid4().hex
-            get_db().save_session(id_session, prenom, email)
+            get_db().save_session(id_session, email)
             session["id"] = id_session
             return redirect("/")
         # Si le mot de passe ne correspond pas, on recommence    
@@ -210,35 +200,6 @@ def cinq_animaux(recherche):
 # def page_not_found(e):
 #     return render_template('404.html'), 404
 
-
-
-
-def authentication_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        if not is_authenticated(session):
-            return send_unauthorized()
-        return f(*args, **kwargs)
-    return decorated
-
-
-@app.route('/logout')
-@authentication_required
-def logout():
-    id_session = session["id"]
-    session.pop('id', None)
-    get_db().delete_session(id_session)
-    return redirect("/")
-
-
-def is_authenticated(session):
-    return "id" in session
-
-
-def send_unauthorized():
-    return Response('Could not verify your access level for that URL.\n'
-                    'You have to login with proper credentials', 401,
-                    {'WWW-Authenticate': 'Basic realm="Login Required"'})    
 
 
 

@@ -1,6 +1,4 @@
-drop table Animal;
-drop table Utilisateur;
-drop table Sessions;
+
 create table Animal (
   id integer NOT NULL primary key AUTOINCREMENT,
   nom_animal varchar( 20 ) NOT NULL,
@@ -9,7 +7,7 @@ create table Animal (
   age integer NOT NULL,
   description text NOT NULL,
   mail_proprio text NOT NULL,
-  img LargeBinary
+  image blob
 );
 
 create table Utilisateur (
@@ -26,8 +24,8 @@ create table Utilisateur (
 );
 
 create table Sessions (
-  id integer primary key AUTOINCREMENT,
-  id_session varchar(32) NOT NULL,
+  id_session varchar(500) primary key,
+  prenom varchar(32) NOT NULL,
   email varchar(25) NOT NULL
 );
 
