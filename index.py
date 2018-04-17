@@ -141,6 +141,7 @@ def authentification():
 @app.route('/mes-informations')
 def info_client():
     username = None
+    email = None
     if "id" in session:
             username = get_db().get_session(session["id"])
             email = get_db().get_email(session["id"])
@@ -167,9 +168,10 @@ def info_client():
         
 
 # Route pour l'information client 
-@app.route('/adoption')
+@app.route('/adoption', methods=["GET", "POST"])
 def adoption():
     username = None
+    email = None
     if "id" in session:
         email = get_db().get_email(session["id"])
         username = get_db().get_session(session["id"])
@@ -189,8 +191,18 @@ def adoption():
         if "photo" in request.files:
             image = request.files["photo"]
 
+        # Si des champs sont vides
+        if (nom_animal == "" or type_animal == "" or race== "" or age == ""
+            or  description == ""):
+            return render_template("adoption.html", error="obligatoires")
 
-        return redirect("/confirmation")
+        db = get_db()
+        if image is not None :
+            db.insert_animal_photo(nom_animal, type_animal, race, age, email, description, image)
+        else:
+            db.insert_animal(nom_animal, type_animal, race, age, email, description)
+
+    return redirect("/confirmation")
 
 
 # Route qui permet l'inscription d'un nouvel utilisateur
@@ -263,8 +275,6 @@ def cinq_animaux(recherche):
 # @app.errorhandler(404)
 # def page_not_found(e):
 #     return render_template('404.html'), 404
-
-
 
 
 def authentication_required(f):

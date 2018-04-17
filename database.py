@@ -18,16 +18,26 @@ class Database:
         if self.connexion is not None:
             self.connexion.close()
 
-    def insert_animal1(self,animal):
-        insert_animal(animal.nom, animal.type, animal.race, animal.age, animal.email_proprio, animal.descrip)
+    #def insert_animal1(self,animal):
+     #   insert_animal(animal.nom, animal.type, animal.race, animal.age, animal.email_proprio, animal.descrip)
 
-    def insert_animal(self, nom, type, race, age,email, description):
-        cursor = self.get_connexion().cursor()
-        cursor.execute(("INSERT INTO animal (nom, type"
-                       ",race, age,email, description) VALUES (?, ?, ?, ?, ?, ?)"),
-                       (nom, date, race, age, email, description))
-        self.get_connexion().commit()
+    def insert_animal_photo(self, nom, type_animal, race, age, email, description, image):
+        cursor = self.get_connexion()
+        cursor.execute("INSERT INTO Animal(nom_animal, type_animal,"
+                        "race, age, mail_proprio, description, image) VALUES"
+                        "(?, ?, ?, ?, ?, ?, ?)", [nom, type_animal, race,
+                                                  age, email, description,
+                                                  sqlite3.Binary(image.read())])
+        cursor.commit()
     
+    def insert_animal(self, nom, type_animal, race, age, email, description):
+        cursor = self.get_connexion()
+        cursor.execute(("INSERT INTO Animal(nom_animal, type_animal,"
+                        "race, age, mail_proprio, description) VALUES"
+                        "(?, ?, ?, ?, ?, ?)"), (nom, type_animal, race,
+                                                  age, email, description))
+        cursor.commit()    
+
     def insert_user1(self, usr):
         insert_user(usr.nom, usr.prenom, usr.email, user.motDePasse)
 
