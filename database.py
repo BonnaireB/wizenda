@@ -134,23 +134,24 @@ class Database:
         return animals
     
     def get_recherche(self, recherche):
-        format_recherche = recherche.split()
+        format_recherche = recherche.lower().split()
         cursor = self.get_connexion().cursor()
-        cursor.execute(("SELECT id, description FROM Animal"))
+        cursor.execute(("SELECT id, description,type_animal, race FROM Animal"))
         pertinent = []
         liste = cursor.fetchall()
         for e in liste :
             points = 0
             for element in format_recherche :
-                if element in e[1].split():
+                identificateurs = e[1].lower().split()+e[2].lower().split()+e[3].lower().split()
+                print(identificateurs)
+                if element in identificateurs:
                     points = points + 1
             tuple = (e[0],points)
             pertinent.append(tuple)
-        pertinent.sort(key=lambda tup: tup[1])
-        pertinent.reverse()
         animaux = []
-        for n in range(0,5):
-            animaux.append(self.get_animal_by_id(pertinent[n][0]))
+        for animal in pertinent:
+            if animal[1] >= 1:
+                animaux.append(self.get_animal_by_id(animal[0]))
         return animaux
         
 
