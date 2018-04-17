@@ -84,7 +84,7 @@ def connexion():
         id_session = uuid.uuid4().hex
         get_db().save_session(id_session, prenom, email)
         session["id"] = id_session
-        return redirect("/")
+        return redirect("/mes-informations")
         # Si le mot de passe ne correspond pas, on recommence    
     else:
         return redirect('/authentification')
@@ -130,7 +130,7 @@ def authentification():
             id_session = uuid.uuid4().hex
             get_db().save_session(id_session, prenom, email)
             session["id"] = id_session
-            return redirect("/")
+            return redirect("/mes-informations")
         # Si le mot de passe ne correspond pas, on recommence    
         else:
             return render_template(
@@ -138,6 +138,30 @@ def authentification():
                                  mdp="mdp incorrect")
 
 
+
+# Route pour l'information client 
+@app.route('/mes-informations')
+def info_client():
+    if request.method == "GET":
+        username = None
+        if "id" in session:
+            username = get_db().get_session(session["id"])
+            email = get_db().get_email(session["id"])
+            return render_template("info-client.html", username=username, 
+                                                       email=email)
+        else:
+            return render_template('info-client.html', unauthorized="no"), 401
+
+    else:
+        nom = request.form["nom"]
+        prenom = request.form["prenom"]
+        mdp = request.form["mdp"]
+        num_tel = request.form["tel"]
+        adresse = request.form["addr"]
+        ville = request.form["ville"]
+        cp = request.form["CP"]
+        return render_template("info-client.html", modif="OK")    
+        
 
 # Route qui permet l'inscription d'un nouvel utilisateur
 @app.route('/inscription', methods=["GET", "POST"])

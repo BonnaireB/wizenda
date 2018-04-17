@@ -88,6 +88,17 @@ class Database:
         else:
             return user[0]
 
+    # Avoir l'email de la session
+    def get_email(self, id_session):
+        cursor = self.get_connexion().cursor()
+        cursor.execute(("SELECT email FROM Sessions where id_session=?"),
+                       (id_session,))
+        email = cursor.fetchone()
+        if email is None:
+            return None
+        else:
+            return email[0]
+
 
 # Inserer une session courante 
     def save_session(self, id_session, prenom, email):
