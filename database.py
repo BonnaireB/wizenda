@@ -143,7 +143,6 @@ class Database:
             points = 0
             for element in format_recherche :
                 identificateurs = e[1].lower().split()+e[2].lower().split()+e[3].lower().split()
-                print(identificateurs)
                 if element in identificateurs:
                     points = points + 1
             tuple = (e[0],points)
