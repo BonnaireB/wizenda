@@ -15,7 +15,7 @@
         <div id="connexion"> 
             
             {% if username %}
-            <div> Bonjour {{username}} &nbsp; | &nbsp; <a href="">Mon compte</a> </div>
+            <div> Bonjour {{username}} &nbsp; | &nbsp; <a href="">Mon compte</a> &nbsp; | &nbsp; <a href="/logout">Déconnexion</a> </div>
 
             {% else %}
             <form action="/" method="POST">

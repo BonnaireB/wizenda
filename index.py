@@ -68,26 +68,26 @@ def connexion():
     if email == "" or mdp == "":
         return redirect("/authentification")
 
-# Si le mail n'existe pas
-        mail = get_db().get_login_info(email)
-        if mail is None:
-            return render_template(
-                "authentification.html",
-                                 mail="mail n'existe pas")
+    # Si le mail n'existe pas
+    mail = get_db().get_login_info(email)
+    if mail is None:
+        return render_template(
+            "authentification.html",
+                             mail="mail n'existe pas")
 
     # On verifie si le mail correspond au mot de passe
-        salt = mail[0]
-        hashed_password = hashlib.sha512(str(mdp + salt).encode("utf-8")).hexdigest()
-        if hashed_password == mail[1]:
-            prenom = get_db().get_login(email)
-            # Accès autorisé
-            id_session = uuid.uuid4().hex
-            get_db().save_session(id_session, prenom, email)
-            session["id"] = id_session
-            return redirect("/")
+    salt = mail[0]
+    hashed_password = hashlib.sha512(str(mdp + salt).encode("utf-8")).hexdigest()
+    if hashed_password == mail[1]:
+        prenom = get_db().get_login(email)
+        # Accès autorisé
+        id_session = uuid.uuid4().hex
+        get_db().save_session(id_session, prenom, email)
+        session["id"] = id_session
+        return redirect("/")
         # Si le mot de passe ne correspond pas, on recommence    
-        else:
-            return redirect('/authentification')
+    else:
+        return redirect('/authentification')
 
 
 # Route pour l'application API
