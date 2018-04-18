@@ -15,7 +15,6 @@
 // Lancée lorsque la recherche est lancée
 function rechercher() {
     var recherche = document.getElementById("recherche").value;
-    console.log('recherche');
     var champContent = document.getElementById("content");
     if (recherche === "") {
     } else {
@@ -24,6 +23,7 @@ function rechercher() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           if (xhr.status === 200) {
             champContent.innerHTML = xhr.responseText;
+
             champContent.value = "";
           } else {
             console.log('Erreur avec le serveur');

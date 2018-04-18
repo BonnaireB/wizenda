@@ -88,7 +88,6 @@ class Database:
         else:
             return user[0]
 
-
 # Inserer une session courante 
     def save_session(self, id_session, prenom, email):
         cursor = self.get_connexion()
@@ -119,9 +118,14 @@ class Database:
     def get_animals(self):
         cursor = self.get_connexion().cursor()
         cursor.execute(("SELECT * FROM Animal"))
-
         animals = cursor.fetchall()
         return animals
+    
+    def get_latest_id(self):
+        cursor = self.get_connexion().cursor()
+        cursor.execute(("SELECT id FROM Animal"))
+        ids = cursor.fetchall()
+        return ids
     
     def get_animal_by_id(self,id):
         cursor = self.get_connexion().cursor()
