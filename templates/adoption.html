@@ -1,6 +1,7 @@
-{% extends "index.html" %}
+{% extends "layout.html" %}
 {% block content %}
 <!-- Formulaire-animal -->
+{% if username %}
     <div id="inscription">
         <form action="/adoption" method="POST" enctype="multipart/form-data">
             <h1>Ajouter un animal pour adoption</h1>
@@ -23,5 +24,9 @@
         </form>
     </div><!-- #inscription-->
 
+{% else %} 
+
+<p> Accès non autorisé. Vous devez d'abord vous <a href="/authentification">connecter</a>.</p>
+   {% endif %}
 
 {% endblock %}
