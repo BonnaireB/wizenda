@@ -42,10 +42,9 @@ def close_connection(exception):
 # Affiche la page d'accueil
 @app.route('/')
 def front_page():
-    user = None
+    username = None
     if "id" in session:
         username = get_db().get_session(session["id"])
-        return render_template('index.html',username=username)
 
     ids = get_db().get_latest_id()
     liste_aleatoire = []
@@ -56,7 +55,7 @@ def front_page():
         del ids[-1]
         liste_aleatoire.append(animal)
     liste_animaux = Animal.init_list(liste_aleatoire)
-    return render_template('index.html',cinq=liste_animaux[:5])
+    return render_template('index.html',cinq=liste_animaux[:5], username=username)
 
 
 # Récupère les données de connexion et redirige l'utilisateur a l'index
@@ -84,7 +83,7 @@ def connexion():
         id_session = uuid.uuid4().hex
         get_db().save_session(id_session, prenom, email)
         session["id"] = id_session
-        return redirect("/")
+        return redirect("/mes-informations")
         # Si le mot de passe ne correspond pas, on recommence    
     else:
         return redirect('/authentification')
@@ -113,7 +112,6 @@ def authentification():
                 "authentification.html",
                                  champs="tous champs obligatoires")
 
-
     # Si le mail n'existe pas
         mail = get_db().get_login_info(email)
         if mail is None:
@@ -130,13 +128,84 @@ def authentification():
             id_session = uuid.uuid4().hex
             get_db().save_session(id_session, prenom, email)
             session["id"] = id_session
-            return redirect("/")
+            return redirect("/mes-informations")
         # Si le mot de passe ne correspond pas, on recommence    
         else:
             return render_template(
                 "authentification.html",
                                  mdp="mdp incorrect")
 
+
+
+# Route pour l'information client 
+@app.route('/mes-informations')
+def info_client():
+    username = None
+    email = None
+    if "id" in session:
+            username = get_db().get_session(session["id"])
+            email = get_db().get_email(session["id"])
+    else:
+        return render_template('info-client.html', unauthorized="no"), 401
+
+    if request.method == "GET":
+        return render_template("info-client.html", username=username, 
+                                                       email=email)
+    else:
+        nom = request.form["nom"]
+        prenom = request.form["prenom"]
+        mdp = request.form["mdp"]
+        num_tel = request.form["tel"]
+        adresse = request.form["addr"]
+        ville = request.form["ville"]
+        cp = request.form["CP"]
+
+        regex_cp = r'[A-Za-z0-9]{6}'
+        if re.match(regex_cp, cp) is None:
+            return render_template("info-client.html", wrong="Wrong") 
+
+        return render_template("info-client.html", modif="OK")    
+        
+
+# Route pour l'information client 
+@app.route('/adoption', methods=["GET", "POST"])
+def adoption():
+    username = None
+    email = None
+    if "id" in session:
+        email = get_db().get_email(session["id"])
+        username = get_db().get_session(session["id"])
+    else:
+        return render_template("adoption.html", unauthorized="no"), 401
+
+    if request.method == "GET":
+            return render_template("adoption.html", username=username)
+    else:
+        nom_animal = request.form["nom_animal"]
+        type_animal = request.form["type_animal"]
+        race = request.form["race"]
+        age = request.form["age"]
+        description = request.form["description"]
+        
+        image = None
+        image_id = None
+        if "photo" in request.files:
+            image = request.files["photo"]
+            image_id = str(uuid.uuid4().hex)
+
+        # Si des champs sont vides
+        if (nom_animal == "" or type_animal == "" or race== "" or age == ""
+            or  description == ""):
+            return render_template("adoption.html", error="obligatoires")
+
+        db = get_db()
+        db.insert_animal(nom_animal, type_animal, race, age, email, description, image_id)
+        if image_id is not None :
+          db.insert_animal_photo(image_id, image)
+
+        id = db.get_animal_from_image_id(nom_animal, email, image_id)
+
+        return redirect("/confirmation")
 
 
 # Route qui permet l'inscription d'un nouvel utilisateur
@@ -209,8 +278,6 @@ def cinq_animaux(recherche):
 # @app.errorhandler(404)
 # def page_not_found(e):
 #     return render_template('404.html'), 404
-
-
 
 
 def authentication_required(f):

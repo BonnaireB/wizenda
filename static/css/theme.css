@@ -1,15 +1,24 @@
 body {
-    color: #3a5199;
+    color: rosybrown;
     margin: auto;
     font-family: "Verdana", Arial, sans-serif;
     font-size: 12px;
     background-color: #d6d7d2;
     background-color: #fff;
+    border-style: solid;
+    background-image: url("/../image/pets_background_dogs_bone_icons_decoration_repeating_style_6828678.jpg");
+}
+
+#inside {
+    padding: 2% 10% 0%10% ;
+    border-style: solid;
+    background-color: whitesmoke;
+    background-clip: content-box;
 }
 
 a {
-    color: #D5D6D2;
-    font-size: 13px;
+    color: lightcoral;
+    font-size: 21px;
     text-decoration: none;
     font-weight: 700;
     text-transform: uppercase;
@@ -38,15 +47,20 @@ em {
     padding-right: 17px;
 }
 
+#recherche{
+    color: black;
+}
 
-
+#recherche-label{
+    color: white;
+}
 /* Header */
 #head {
     margin-top:50px;
 }
 
 header {
-    background-color: #2F2E33;
+    background-color: rosybrown;
     text-align: center;
     margin-bottom: 100px;
     padding-top: 10px;
@@ -316,7 +330,7 @@ p.login-button {
 
 footer {
     height: 50px;
-    background-color: #302f33;
+    background-color: rosybrown;
     margin-bottom: 100px;
     padding-top: 10px;
     padding-bottom: 10px;

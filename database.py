@@ -18,16 +18,26 @@ class Database:
         if self.connexion is not None:
             self.connexion.close()
 
-    def insert_animal1(self,animal):
-        insert_animal(animal.nom, animal.type, animal.race, animal.age, animal.email_proprio, animal.descrip)
+    #def insert_animal1(self,animal):
+     #   insert_animal(animal.nom, animal.type, animal.race, animal.age, animal.email_proprio, animal.descrip)
 
-    def insert_animal(self, nom, type, race, age,email, description):
-        cursor = self.get_connexion().cursor()
-        cursor.execute(("INSERT INTO animal (nom, type"
-                       ",race, age,email, description) VALUES (?, ?, ?, ?, ?, ?)"),
-                       (nom, date, race, age, email, description))
-        self.get_connexion().commit()
+    def insert_animal_photo(self, image_id, image):
+        cursor = self.get_connexion()
+        cursor.execute("INSERT INTO Image(id, image)"
+                        " VALUES (?, ?)", [image_id,
+                                           sqlite3.Binary(image.read())])
+        cursor.commit()
     
+    def insert_animal(self, nom, type_animal, race, age, email, description, image_id):
+        cursor = self.get_connexion()
+        cursor.execute(("INSERT INTO Animal(nom_animal, type_animal,"
+                        "race, age, mail_proprio, description, image_id) VALUES"
+                        "(?, ?, ?, ?, ?, ?, ?)"), (nom, type_animal, race,
+                                                  age, email, description, image_id))
+        cursor.commit()    
+
+
+
     def insert_user1(self, usr):
         insert_user(usr.nom, usr.prenom, usr.email, user.motDePasse)
 
@@ -88,6 +98,18 @@ class Database:
         else:
             return user[0]
 
+    # Avoir l'email de la session
+    def get_email(self, id_session):
+        cursor = self.get_connexion().cursor()
+        cursor.execute(("SELECT email FROM Sessions where id_session=?"),
+                       (id_session,))
+        email = cursor.fetchone()
+        if email is None:
+            return None
+        else:
+            return email[0]
+
+
 # Inserer une session courante 
     def save_session(self, id_session, prenom, email):
         cursor = self.get_connexion()
@@ -136,6 +158,9 @@ class Database:
         else:
             return animal
         return animals
+
+
+
     
     def get_recherche(self, recherche):
         format_recherche = recherche.lower().split()
