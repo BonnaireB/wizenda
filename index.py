@@ -55,7 +55,7 @@ def front_page():
         del animaux_raw[-1]
         liste_aleatoire.append(animal)
     liste_animaux = Animal.init_list(liste_aleatoire)
-    return render_template('index.html',cinq=liste_animaux, username=username)
+    return render_template('accueil.html',cinq=liste_animaux, username=username)
 
 
 # Récupère les données de connexion et redirige l'utilisateur a l'index
@@ -89,18 +89,12 @@ def connexion():
         return redirect('/authentification')
 
 
-# Route pour l'application API
-@app.route('/api/animals/', methods=["GET"])
-def liste_animaux():
-    if request.method == "GET":
-        animals = get_db().get_animals()
-        data = [{"nom": each[1],"type":each[2],"race":each[3],"age":each[4],"description":each[5],"mail_proprio":each[6], "_id": each[0]} for each in animals]
-        return jsonify(data)
-
-
 # Redirige vers une page de connexion sur le site
 @app.route('/authentification', methods=["GET", "POST"])
 def authentification():
+    if "id" in session:
+        return redirect('/')
+
     if request.method == "GET":
         return render_template("authentification.html")
     else: 
@@ -136,7 +130,6 @@ def authentification():
                                  mdp="mdp incorrect")
 
 
-
 # Route pour l'information client 
 @app.route('/mes-informations')
 def info_client():
@@ -146,7 +139,7 @@ def info_client():
             username = get_db().get_session(session["id"])
             email = get_db().get_email(session["id"])
     else:
-        return render_template('info-client.html', unauthorized="no"), 401
+        return render_template('authentification.html', wrongMatricule="fx"), 401
 
     if request.method == "GET":
         return render_template("info-client.html", username=username, 
@@ -167,7 +160,7 @@ def info_client():
         return render_template("info-client.html", modif="OK")    
         
 
-# Route pour l'information client 
+# Route pour faire adopter un animal
 @app.route('/adoption', methods=["GET", "POST"])
 def adoption():
     username = None
@@ -176,7 +169,7 @@ def adoption():
         email = get_db().get_email(session["id"])
         username = get_db().get_session(session["id"])
     else:
-        return render_template("adoption.html", unauthorized="no"), 401
+        return render_template('authentification.html', wrongMatricule="fx"), 401
 
     if request.method == "GET":
             return render_template("adoption.html", username=username)
@@ -211,6 +204,9 @@ def adoption():
 # Route qui permet l'inscription d'un nouvel utilisateur
 @app.route('/inscription', methods=["GET", "POST"])
 def inscription():
+    if "id" in session:
+        return redirect('/')
+
     if request.method == "GET":
         return render_template("inscription.html")
     else: 
@@ -227,7 +223,6 @@ def inscription():
         # On se connecte a la base de donnees
         db = get_db()        
         verification_email = db.verification_email_existant(email)
-
 
         regex_cp = r'[A-Za-z0-9]{6}'
 
@@ -257,22 +252,40 @@ def confirmation():
 
 @app.route('/<id>')
 def page_animal(id):
+    username = None
+    email = None
+    if "id" in session:
+        username = get_db().get_session(session["id"])
+       
+
     page = get_db().get_animal_by_id(id)
     if page is None :
         return render_template(("404.html"))
     else :
         animal = Animal(page[0],page[1],page[2],page[3],page[4],page[5],page[6])
-        return render_template(("animal.html"),id=id, animal=animal)
+        return render_template(("animal.html"),id=id, animal=animal, username=username)
 
 
 
 
 @app.route('/cinq-animaux/<recherche>')
 def cinq_animaux(recherche):
+    username = None
+    if "id" in session:
+        username = get_db().get_session(session["id"])
+
     animaux_raw = get_db().get_recherche(recherche)
     animaux = Animal.init_list(animaux_raw)
-    return render_template('cinq-animaux.html', animaux=animaux)
+    return render_template('cinq-animaux.html', animaux=animaux, username=username)
 
+
+# Route pour l'application API
+@app.route('/api/animals/', methods=["GET"])
+def liste_animaux():
+    if request.method == "GET":
+        animals = get_db().get_animals()
+        data = [{"nom": each[1],"type":each[2],"race":each[3],"age":each[4],"description":each[5],"mail_proprio":each[6], "_id": each[0]} for each in animals]
+        return jsonify(data)
 
 # # La page 404.html en cas d'erreur
 # @app.errorhandler(404)
@@ -306,7 +319,6 @@ def send_unauthorized():
     return Response('Could not verify your access level for that URL.\n'
                     'You have to login with proper credentials', 401,
                     {'WWW-Authenticate': 'Basic realm="Login Required"'})    
-
 
 
 app.secret_key = "(*&*&322387he738220)(*(*22347657"

@@ -1,4 +1,4 @@
-{% extends "index.html" %}
+{% extends "layout.html" %}
 {% block content %}
 
 
@@ -31,14 +31,14 @@
 
     <h2> Modification faite! </h2>
 
-   {% endif %}
+                    {% endif %}
             </p>
 
         </form>
 </div>
 
    {% else %} 
-<p> Accès non autorisé </p>
+<p> Accès non autorisé. Vous devez d'abord vous <a href"/authentification">connecter</a>.</p>
    {% endif %}
 
 

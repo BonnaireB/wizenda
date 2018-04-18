@@ -1,4 +1,5 @@
 
+
 {% for n in animaux %}
 <div class="animal-frontpage">
   <a class="animal-frontpage-nom" href="{{ url_for('page_animal', id=n.id) }}"> {{ n.nom }} </a>

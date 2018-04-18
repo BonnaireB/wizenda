@@ -50,14 +50,7 @@
 
 <div id="content">
 
-    {% for n in cinq %}
-    <div class="animal-frontpage">
-        <a class="animal-frontpage-nom" href="{{ url_for('page_animal', id=n.id) }}"> {{ n.nom }} </a>
-        <h2 class="animal-frontpage-type"> {{ n.type_animal }} {{n.race}}</h2>
 
-
-    </div>
-    {% endfor %}
     {% block content %}{% endblock %}
 
 
