@@ -10,13 +10,13 @@
 {% if animal %}
 
 <h2> Le joli {{ animal.nom }} </h2>
-<img src=""/>
+<img src="/image/{{ animal.image }}"/>
 <dl>
 
 <dt> Type:</dt> <dd> {{ animal.type_animal }} </dd>
 <dt> Race:</dt> <dd> {{ animal.race }} </dd>
 <dt> Age:</dt> <dd> {{ animal.age }} ans </dd>
-<dt> Description:</dt> <dd> {{ animal.description}} </dd>
+<dt> Description:</dt> <dd> {{ animal.description }} </dd>
 </dl>
 
 {% endif %}
