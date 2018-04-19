@@ -28,12 +28,14 @@ class Database:
                                            sqlite3.Binary(image.read())])
         cursor.commit()
     
-    def insert_animal(self, nom, type_animal, race, age, email, description, image_id):
+    def insert_animal(self, nom, type_animal, race, age, email, description,
+                      image_id):
         cursor = self.get_connexion()
         cursor.execute(("INSERT INTO Animal(nom_animal, type_animal,"
                         "race, age, mail_proprio, description, image_id) VALUES"
                         "(?, ?, ?, ?, ?, ?, ?)"), (nom, type_animal, race,
-                                                  age, email, description, image_id))
+                                                   age, email, description,
+                                                   image_id))
         cursor.commit()    
 
 
@@ -61,9 +63,20 @@ class Database:
         cursor = self.get_connexion().cursor()
         cursor.execute(("INSERT INTO utilisateur (nom, prenom, email, salt, hash,"
                        "num_de_tel, adresse, ville, cp) VALUES (?, ?, ?, ?, ?,"
-                       "?, ?, ?, ?)"), (nom, prenom, email, salt,hashed_password, 
+                       "?, ?, ?, ?)"), (nom, prenom, email, salt, hashed_password, 
                                         tel, adresse, ville, cp,))
         self.get_connexion().commit()
+
+# Obtenir le prenom de l'utilisateur
+    def get_fname(self):
+        cursor = self.get_connexion().cursor()
+        cursor.execute("SELECT Utilisateur.prenom from Utilisateur CROSS JOIN"
+                        " Sessions WHERE Sessions.email = Utilisateur.email")
+        prenom = cursor.fetchone()
+        if prenom is None:
+            return None
+        else:
+            return prenom[0]
 
 # Savoir si l'email existe deja dans la base de donnees 
     def verification_email_existant(self, email):
@@ -87,16 +100,6 @@ class Database:
         else:
             return user[0], user[1]
 
-# Methode pour obtenir info   
-    def get_login(self, email):
-        cursor = self.get_connexion().cursor()
-        cursor.execute(("SELECT prenom FROM Utilisateur WHERE email=?"),
-                       (email,))
-        user = cursor.fetchone()
-        if user is None:
-            return None
-        else:
-            return user[0]
 
     # Avoir l'email de la session
     def get_email(self, id_session):
@@ -109,11 +112,83 @@ class Database:
         else:
             return email[0]
 
+    # Pour obtenir toutes les infos de l'utilsateur
+    def get_info(self, email):
+        cursor = self.get_connexion().cursor()
+        cursor.execute(("SELECT nom, prenom, num_de_tel, adresse, ville, cp"
+                        " FROM Utilisateur WHERE email=?"),(email,))
+        user_info = cursor.fetchall()
+        if user_info == 0:
+            return None
+        else:
+            return [(user[0], user[1], user[2], user[3], user[4], user[5])
+             for user in user_info]
+
+# Modifie le nom de l'utilisateur
+    def modify_name(self, name, email):
+        co = self.get_connexion()
+        cursor = co.cursor()
+        cursor.execute(("UPDATE Utilisateur set nom = ? where email = ?"),
+                        (name, email,))
+        co.commit()
+
+# Modifie le prenom de l'utilisateur
+    def modify_fname(self, fname, email):
+        co = self.get_connexion()
+        cursor = co.cursor()
+        cursor.execute(("UPDATE Utilisateur set prenom = ? where email = ?"),
+                        (fname, email,))
+        co.commit() 
+
+# Modifie le numero de l'utilisateur
+    def modify_num(self, num, email):
+        co = self.get_connexion()
+        cursor = co.cursor()
+        cursor.execute(("UPDATE Utilisateur set num_de_tel = ? where email = ?"),
+                        (num, email,))
+        co.commit()         
+
+# Modifie l'adresse de l'utilisateur
+    def modify_addr(self, addr, email):
+        co = self.get_connexion()
+        cursor = co.cursor()
+        cursor.execute(("UPDATE Utilisateur set adresse = ? where email = ?"),
+                        (addr, email,))
+        co.commit() 
+
+# Modifie la ville de l'utilisateur
+    def modify_ville(self, ville, email):
+        co = self.get_connexion()
+        cursor = co.cursor()
+        cursor.execute(("UPDATE Utilisateur set ville = ? where email = ?"),
+                        (ville, email,))
+        co.commit()
+
+# Modifie le cp de l'utilisateur
+    def modify_cp(self, cp, email):
+        co = self.get_connexion()
+        cursor = co.cursor()
+        cursor.execute(("UPDATE Utilisateur set cp = ? where email = ?"),
+                        (cp, email,))
+        co.commit()    
+
+    # Modifie le cp de l'utilisateur
+    def modify_mdp(self, mdp, email):
+        co = self.get_connexion()
+        salt = uuid.uuid4().hex
+        hashed_password = hashlib.sha512(str(mdp + salt).encode("utf-8")).hexdigest()
+
+        cursor = co.cursor()
+        cursor.execute(("UPDATE Utilisateur SET salt = ? AND hash = ? "
+                        "WHERE email = ?"), (salt, hashed_password, email,))
+        co.commit()   
+          
 
 # Inserer une session courante 
-    def save_session(self, id_session, prenom, email):
+    def save_session(self, id_session, email):
         cursor = self.get_connexion()
-        cursor.execute(("INSERT INTO Sessions(id_session, prenom, email) VALUES(?, ?, ?)"), (id_session, prenom, email))
+        cursor.execute(("INSERT INTO Sessions(id_session, email) VALUES(?, ?)")
+                        , (id_session, email,))
         self.get_connexion().commit()            
 
     # Supprime une session
@@ -126,13 +201,13 @@ class Database:
     # Regarde si une session existe deja 
     def get_session(self, id_session):
         cursor = self.get_connexion().cursor()
-        cursor.execute(("SELECT prenom FROM Sessions where id_session=?"),
+        cursor.execute(("SELECT email FROM Sessions where id_session=?"),
                        (id_session,))
-        prenom = cursor.fetchone()
-        if prenom is None:
+        email = cursor.fetchone()
+        if email is None:
             return None
         else:
-            return prenom[0]
+            return email[0]
 
 
     #def insert_

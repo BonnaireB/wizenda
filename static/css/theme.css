@@ -70,8 +70,7 @@ em {
   
 }
 img {
-  width:50%;
-  height:50%;
+
 }
 
 /* Header */
@@ -382,6 +381,11 @@ footer p {
     padding-right: 50px;
     padding-left: 50px;
     padding-bottom: 30px;
+}
+
+#content img {
+  width:50%;
+  height:50%;
 }
 
 

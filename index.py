@@ -44,7 +44,7 @@ def close_connection(exception):
 def front_page():
     username = None
     if "id" in session:
-        username = get_db().get_session(session["id"])
+        username = get_db().get_fname();
 
     ids = get_db().get_latest_id()
     liste_aleatoire = []
@@ -78,10 +78,9 @@ def connexion():
     salt = mail[0]
     hashed_password = hashlib.sha512(str(mdp + salt).encode("utf-8")).hexdigest()
     if hashed_password == mail[1]:
-        prenom = get_db().get_login(email)
         # Accès autorisé
         id_session = uuid.uuid4().hex
-        get_db().save_session(id_session, prenom, email)
+        get_db().save_session(id_session, email)
         session["id"] = id_session
         return redirect("/mes-informations")
         # Si le mot de passe ne correspond pas, on recommence    
@@ -117,10 +116,9 @@ def authentification():
         salt = mail[0]
         hashed_password = hashlib.sha512(str(mdp + salt).encode("utf-8")).hexdigest()
         if hashed_password == mail[1]:
-            prenom = get_db().get_login(email)
             # Accès autorisé
             id_session = uuid.uuid4().hex
-            get_db().save_session(id_session, prenom, email)
+            get_db().save_session(id_session, email)
             session["id"] = id_session
             return redirect("/mes-informations")
         # Si le mot de passe ne correspond pas, on recommence    
@@ -131,20 +129,29 @@ def authentification():
 
 
 # Route pour l'information client 
-@app.route('/mes-informations')
+@app.route('/mes-informations', methods=["GET", "POST"])
 def info_client():
     username = None
     email = None
+    # Si une session existe
     if "id" in session:
-            username = get_db().get_session(session["id"])
+            username = get_db().get_fname();
             email = get_db().get_email(session["id"])
     else:
         return render_template('authentification.html', wrongMatricule="fx"), 401
 
     if request.method == "GET":
-        return render_template("info-client.html", username=username, 
-                                                       email=email)
+        info = get_db().get_info(email)
+        if info is None:
+            return redirect('/')
+        else:
+            return render_template("info-client.html", username=username, 
+                                                       email=email,
+                                                       infos=info)
     else:
+        info = get_db().get_info(email)
+        username = get_db().get_fname()
+
         nom = request.form["nom"]
         prenom = request.form["prenom"]
         mdp = request.form["mdp"]
@@ -153,11 +160,32 @@ def info_client():
         ville = request.form["ville"]
         cp = request.form["CP"]
 
-        regex_cp = r'[A-Za-z0-9]{6}'
-        if re.match(regex_cp, cp) is None:
-            return render_template("info-client.html", wrong="Wrong") 
+        db = get_db()
+        if nom != "":
+            db.modify_name(nom, email)
+        if prenom != "":
+            db.modify_fname(prenom, email)
+        if num_tel != "":
+            db.modify_num(prenom, email)
+        if adresse != "":
+            db.modify_addr(adress, email) 
+        if ville != "":
+            db.modify_ville(ville, email)   
+        if mdp !="":
+            db.modify_mdp(mdp, email)
+        if cp != "":
+            regex_cp = r'[A-Za-z0-9]{6}'
+            if re.match(regex_cp, cp) is None:
+                return render_template("info-client.html", wrong="Wrong", 
+                                                           username=username,
+                                                           infos=info) 
 
-        return render_template("info-client.html", modif="OK")    
+            db.modify_cp(cp, email)
+                                                                    
+
+        return render_template("info-client.html", modif="OK", 
+                                                   username=username,
+                                                   email=email, infos=info)    
         
 
 # Route pour faire adopter un animal
@@ -167,7 +195,7 @@ def adoption():
     email = None
     if "id" in session:
         email = get_db().get_email(session["id"])
-        username = get_db().get_session(session["id"])
+        username = get_db().get_fname();
     else:
         return render_template('authentification.html', wrongMatricule="fx"), 401
 
@@ -208,7 +236,7 @@ def inscription():
         return redirect('/')
 
     if request.method == "GET":
-        return render_template("inscription.html")
+            return render_template("inscription.html")
     else: 
         # On recupere toutes les donnees
         nom = request.form["nom"]
@@ -255,7 +283,7 @@ def page_animal(id):
     username = None
     email = None
     if "id" in session:
-        username = get_db().get_session(session["id"])
+        username = get_db().get_fname();
        
 
     page = get_db().get_animal_by_id(id)
@@ -272,7 +300,7 @@ def page_animal(id):
 def cinq_animaux(recherche):
     username = None
     if "id" in session:
-        username = get_db().get_session(session["id"])
+        username = get_db().get_fname();
 
     animaux_raw = get_db().get_recherche(recherche)
     animaux = Animal.init_list(animaux_raw)
