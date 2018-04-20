@@ -231,12 +231,13 @@ class Database:
             return None
         else:
             return animal
+        return animals
 
     def get_recherche(self, recherche):
         format_recherche = recherche.lower().split()
         cursor = self.get_connexion().cursor()
-        cursor.execute(("SELECT id, description,type_animal, race,"
-                        " nom_animal FROM Animal"))
+        cursor.execute(("SELECT id, description, type_animal,"
+                        "race FROM Animal"))
         pertinent = []
         liste = cursor.fetchall()
         for e in liste:

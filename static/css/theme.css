@@ -58,11 +58,8 @@ em {
      float: left;
 }
 
-.fp-animaux {
-    display: inline-flex;
-    }
 .text {
-     padding: 4%;
+     padding-top: 30px;
      height: 100px;
      font-family: futura-pt, sans-serif;
      font-size: 20px;
@@ -72,11 +69,9 @@ em {
   font-size:20px;
   
 }
+img {
 
-#content img {
-      width:50%;
-      height:50%;
-    }
+}
 
 /* Header */
 #head {
@@ -101,7 +96,7 @@ header h1 {
 }
 
 header h2 {
-    color: beige;
+    color: #fff;
     text-transform: uppercase;
     font-family: Oswald, sans-serif;
     font-size: 20px;
