@@ -209,6 +209,13 @@ class Database:
             blob_image = photo[0]
             return photo
 
+    # Inserer un token pour reset le mot de passe
+    def single_token(self, email, exp, now, token):
+        cursor = self.get_connexion()
+        cursor.execute(("INSERT INTO Token(email, exp, now, token) "
+                        "VALUES(?, ?, ?, ?)"), (email, exp, now, token,))
+        self.get_connexion().commit()        
+
     # def insert_
 
     def get_animals(self):

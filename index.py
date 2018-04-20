@@ -12,12 +12,17 @@ from flask import Response
 from functools import wraps
 from .database import Database
 from .objets import *
-from .mail import *
+from .email import *
 from flask import jsonify
+from random import *
+from uuid import uuid4
+
 import re
 import hashlib
 import uuid
-from random import *
+import calendar
+import datetime
+
 
 
 # from .objets import *
@@ -286,13 +291,55 @@ def confirmation_animal():
     return render_template("conf-animal.html")
 
 
+# Route qui confirme l'espace de creation d'adoption
+@app.route('/reinit')
+def confirmation_pwd():
+    return render_template("conf-pwd.html")
+
+
 # Route pour modifier son mot de passe 
 @app.route('/reset', methods=["GET", "POST"])
 def reinitialisation():
     if request.method == "GET":
         return render_template("reinit.html")
     else:
-        return render_template("reinit.html") 
+        email = request.form["email"]
+
+        # On se connecte a la base de donnees
+        db = get_db()
+        verification_email = db.verification_email_existant(email)
+
+        if (verification_email != email):
+            return render_template("reinit.html",
+                                   mail="mail n'existe pas")
+
+        # On cree un unique token au hasard 
+        unique_token = str(uuid.uuid4())
+        # On decide quand est-ce que cette cle sera expire
+        expiration = datetime.datetime.utcnow() + datetime.timedelta(days=0, 
+                                                              seconds=1800)
+        exp = str(expiration.hour) + ":" + str(expiration.minute)
+        hour = datetime.datetime.utcnow()
+        now = str(hour.hour) + ":" + str(hour.minute)
+
+        db.single_token(email, exp, now, unique_token)
+
+        msg = Email(email, unique_token).send_msg(email, unique_token)
+        return redirect('/reinit') 
+
+
+@app.route('/reset/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if request.method == "GET":
+        return render_template("new-pwd.html")
+    else:
+
+
+        return render_template("new-pwd.html")
+
+
+
+
 
 
 @app.route('/<id>')
