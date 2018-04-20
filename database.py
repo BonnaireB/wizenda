@@ -235,25 +235,16 @@ class Database:
     def get_recherche(self, recherche):
         format_recherche = recherche.lower().split()
         cursor = self.get_connexion().cursor()
-<<<<<<< HEAD
-        cursor.execute(("SELECT id, description,type_animal, race, nom_animal FROM Animal"))
-=======
-        cursor.execute(("SELECT id, description, type_animal,"
-                        "race FROM Animal"))
->>>>>>> 59fc4c92591d88fd885ff0ab0a4866d701caa894
+        cursor.execute(("SELECT id, description,type_animal, race,"
+                        " nom_animal FROM Animal"))
         pertinent = []
         liste = cursor.fetchall()
         for e in liste:
             points = 0
-<<<<<<< HEAD
-            for element in format_recherche :
-                identificateurs = e[1].lower().split()+e[2].lower().split()+e[3].lower().split()+e[4].lower().split()
-=======
             for element in format_recherche:
                 identificateurs = (e[1].lower().split() +
                                    e[2].lower().split() +
                                    e[3].lower().split())
->>>>>>> 59fc4c92591d88fd885ff0ab0a4866d701caa894
                 if element in identificateurs:
                     points = points + 1
             tuple = (e[0], points)
