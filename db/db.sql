@@ -33,7 +33,6 @@ create table Utilisateur (
 
 create table Sessions (
   id_session varchar(500) primary key,
-  prenom varchar(32) NOT NULL,
   email varchar(25) NOT NULL
 );
 

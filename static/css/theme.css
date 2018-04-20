@@ -72,10 +72,16 @@ em {
   font-size:20px;
   
 }
+<<<<<<< HEAD
 #content img {
       width:50%;
       height:50%;
     }
+=======
+img {
+
+}
+>>>>>>> 59fc4c92591d88fd885ff0ab0a4866d701caa894
 
 /* Header */
 #head {
@@ -385,6 +391,11 @@ footer p {
     padding-right: 50px;
     padding-left: 50px;
     padding-bottom: 30px;
+}
+
+#content img {
+  width:50%;
+  height:50%;
 }
 
 

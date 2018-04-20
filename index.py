@@ -44,18 +44,19 @@ def close_connection(exception):
 def front_page():
     username = None
     if "id" in session:
-        username = get_db().get_session(session["id"])
+        username = get_db().get_fname()
 
     ids = get_db().get_latest_id()
     liste_aleatoire = []
-    for i in range(0,len(ids)):
-        index = randrange( len(ids))
+    for i in range(0, len(ids)):
+        index = randrange(len(ids))
         animal = get_db().get_animal_by_id(int(ids[index][0]))
         ids[index] = ids[-1]
         del ids[-1]
         liste_aleatoire.append(animal)
     liste_animaux = Animal.init_list(liste_aleatoire)
-    return render_template('accueil.html',cinq=liste_animaux[:5], username=username)
+    return render_template('accueil.html', cinq=liste_animaux[:5],
+                           username=username)
 
 
 # Récupère les données de connexion et redirige l'utilisateur a l'index
@@ -70,21 +71,20 @@ def connexion():
     # Si le mail n'existe pas
     mail = get_db().get_login_info(email)
     if mail is None:
-        return render_template(
-            "authentification.html",
-                             mail="mail n'existe pas")
+        return render_template("authentification.html",
+                               mail="mail n'existe pas")
 
     # On verifie si le mail correspond au mot de passe
     salt = mail[0]
-    hashed_password = hashlib.sha512(str(mdp + salt).encode("utf-8")).hexdigest()
+    hashed_password = (hashlib.sha512(str(mdp +
+                       salt).encode("utf-8")).hexdigest())
     if hashed_password == mail[1]:
-        prenom = get_db().get_login(email)
         # Accès autorisé
         id_session = uuid.uuid4().hex
-        get_db().save_session(id_session, prenom, email)
+        get_db().save_session(id_session, email)
         session["id"] = id_session
         return redirect("/mes-informations")
-        # Si le mot de passe ne correspond pas, on recommence    
+        # Si le mot de passe ne correspond pas, on recommence
     else:
         return redirect('/authentification')
 
@@ -97,54 +97,61 @@ def authentification():
 
     if request.method == "GET":
         return render_template("authentification.html")
-    else: 
+    else:
         email = request.form["email"]
         mdp = request.form["mot_de_passe"]
 
         if email == "" or mdp == "":
-            return render_template(
-                "authentification.html",
-                                 champs="tous champs obligatoires")
+            return render_template("authentification.html",
+                                   champs="tous champs obligatoires")
 
     # Si le mail n'existe pas
         mail = get_db().get_login_info(email)
         if mail is None:
-            return render_template(
-                "authentification.html",
-                                 mail="mail n'existe pas")
+            return render_template("authentification.html",
+                                   mail="mail n'existe pas")
 
     # On verifie si le mail correspond au mot de passe
         salt = mail[0]
-        hashed_password = hashlib.sha512(str(mdp + salt).encode("utf-8")).hexdigest()
+        hashed_password = (hashlib.sha512(str(mdp +
+                           salt).encode("utf-8")).hexdigest())
         if hashed_password == mail[1]:
-            prenom = get_db().get_login(email)
             # Accès autorisé
             id_session = uuid.uuid4().hex
-            get_db().save_session(id_session, prenom, email)
+            get_db().save_session(id_session, email)
             session["id"] = id_session
             return redirect("/mes-informations")
-        # Si le mot de passe ne correspond pas, on recommence    
+        # Si le mot de passe ne correspond pas, on recommence
         else:
-            return render_template(
-                "authentification.html",
-                                 mdp="mdp incorrect")
+            return render_template("authentification.html",
+                                   mdp="mdp incorrect")
 
 
-# Route pour l'information client 
-@app.route('/mes-informations')
+# Route pour l'information client
+@app.route('/mes-informations', methods=["GET", "POST"])
 def info_client():
     username = None
     email = None
+    # Si une session existe
     if "id" in session:
-            username = get_db().get_session(session["id"])
+            username = get_db().get_fname()
             email = get_db().get_email(session["id"])
     else:
-        return render_template('authentification.html', wrongMatricule="fx"), 401
+        return render_template('authentification.html',
+                               wrongMatricule="fx"), 401
 
     if request.method == "GET":
-        return render_template("info-client.html", username=username, 
-                                                       email=email)
+        info = get_db().get_info(email)
+        if info is None:
+            return redirect('/')
+        else:
+            return render_template("info-client.html", username=username,
+                                   email=email,
+                                   infos=info)
     else:
+        info = get_db().get_info(email)
+        username = get_db().get_fname()
+
         nom = request.form["nom"]
         prenom = request.form["prenom"]
         mdp = request.form["mdp"]
@@ -153,12 +160,34 @@ def info_client():
         ville = request.form["ville"]
         cp = request.form["CP"]
 
-        regex_cp = r'[A-Za-z0-9]{6}'
-        if re.match(regex_cp, cp) is None:
-            return render_template("info-client.html", wrong="Wrong") 
+        db = get_db()
+        if nom != "":
+            db.modify_name(nom, email)
+        if prenom != "":
+            db.modify_fname(prenom, email)
+        if num_tel != "":
+            db.modify_num(prenom, email)
+        if adresse != "":
+            db.modify_addr(adresse, email)
+        if ville != "":
+            db.modify_ville(ville, email)
+        if mdp != "":
+            db.modify_mdp(mdp, email)
+        if cp != "":
+            regex_cp = r'[A-Za-z0-9]{6}'
+            if re.match(regex_cp, cp) is None:
+                return render_template("info-client.html", wrong="Wrong",
+                                       username=username,
+                                       infos=info)
 
-        return render_template("info-client.html", modif="OK")    
-        
+            db.modify_cp(cp, email)
+
+        info = get_db().get_info(email)
+        username = get_db().get_fname()
+        return render_template("info-client.html", modif="OK",
+                               username=username,
+                               email=email, infos=info)
+
 
 # Route pour faire adopter un animal
 @app.route('/adoption', methods=["GET", "POST"])
@@ -167,9 +196,10 @@ def adoption():
     email = None
     if "id" in session:
         email = get_db().get_email(session["id"])
-        username = get_db().get_session(session["id"])
+        username = get_db().get_fname()
     else:
-        return render_template('authentification.html', wrongMatricule="fx"), 401
+        return render_template('authentification.html',
+                               wrongMatricule="fx"), 401
 
     if request.method == "GET":
             return render_template("adoption.html", username=username)
@@ -179,26 +209,27 @@ def adoption():
         race = request.form["race"]
         age = request.form["age"]
         description = request.form["description"]
-        
+
+        # Si des champs sont vides
+        if (nom_animal == "" or type_animal == "" or race == "" or age == ""
+            or description == ""):
+            return render_template("adoption.html", error="obligatoires")
+
         image = None
         image_id = None
         if "photo" in request.files:
             image = request.files["photo"]
             image_id = str(uuid.uuid4().hex)
 
-        # Si des champs sont vides
-        if (nom_animal == "" or type_animal == "" or race== "" or age == ""
-            or  description == ""):
-            return render_template("adoption.html", error="obligatoires")
 
         db = get_db()
-        db.insert_animal(nom_animal, type_animal, race, age, email, description, image_id)
-        if image_id is not None :
-          db.insert_animal_photo(image_id, image)
+        db.insert_animal(nom_animal, type_animal,
+                         race, age, email, description, image_id)
+        if image_id is not None:
+            db.insert_animal_photo(image_id, image)
 
-        id = db.get_animal_from_image_id(nom_animal, email, image_id)
 
-        return redirect("/confirmation")
+        return redirect("/ok")
 
 
 # Route qui permet l'inscription d'un nouvel utilisateur
@@ -208,8 +239,8 @@ def inscription():
         return redirect('/')
 
     if request.method == "GET":
-        return render_template("inscription.html")
-    else: 
+            return render_template("inscription.html")
+    else:
         # On recupere toutes les donnees
         nom = request.form["nom"]
         prenom = request.form["prenom"]
@@ -221,24 +252,24 @@ def inscription():
         cp = request.form["CP"]
 
         # On se connecte a la base de donnees
-        db = get_db()        
+        db = get_db()
         verification_email = db.verification_email_existant(email)
 
         regex_cp = r'[A-Za-z0-9]{6}'
 
         # Si des champs sont vides
         if (nom == "" or prenom == "" or email == "" or mdp == ""
-            or  num_tel == "" or adresse == "" or ville == "" or cp == ""):
+            or num_tel == "" or adresse == "" or ville == "" or cp == ""):
             return render_template("inscription.html",
-                                error="Tous les champs sont obligatoires.")
+                                   error="Tous les champs sont obligatoires.")
         elif re.match(regex_cp, cp) is None:
-            return render_template("inscription.html", wrong="Wrong") 
+            return render_template("inscription.html", wrong="Wrong")
 
         if (verification_email == email):
-            return render_template("inscription.html", email="mail existe deja") 
+            return render_template("inscription.html",
+                                   email="mail existe deja")
 
-
-        db.create_user(nom, prenom, email, mdp, num_tel, adresse, ville, cp) 
+        db.create_user(nom, prenom, email, mdp, num_tel, adresse, ville, cp)
 
         return redirect("/confirmation")
 
@@ -249,34 +280,51 @@ def confirmation():
     return render_template("confirmation.html")
 
 
+# Route qui confirme l'espace de creation d'adoption
+@app.route('/ok')
+def confirmation_animal():
+    return render_template("conf-animal.html")
+
 
 @app.route('/<id>')
 def page_animal(id):
     username = None
     email = None
     if "id" in session:
-        username = get_db().get_session(session["id"])
-       
+        username = get_db().get_fname()
 
     page = get_db().get_animal_by_id(id)
-    if page is None :
+    if page is None:
         return render_template(("404.html"))
-    else :
-        animal = Animal(page[0],page[1],page[2],page[3],page[4],page[5],page[6])
-        return render_template(("animal.html"),id=id, animal=animal, username=username)
+    else:
+        animal = Animal(page[0], page[1], page[2],
+                        page[3], page[4], page[5], page[6], page[7])
+        return render_template(("animal.html"),
+                               id=id, animal=animal, username=username)
 
 
+@app.route('/image/<id_image>.png')
+def photo(id_image):
+    db = get_db()
+    binary_data = db.load_picture(id_image)
+    if binary_data is None:
+        return Response(status=404)
+    else:
+        response = make_response(binary_data)
+        response.headers.set('Content-Type', 'image/png')
+    return response
 
 
 @app.route('/cinq-animaux/<recherche>')
 def cinq_animaux(recherche):
     username = None
     if "id" in session:
-        username = get_db().get_session(session["id"])
+        username = get_db().get_fname()
 
     animaux_raw = get_db().get_recherche(recherche)
     animaux = Animal.init_list(animaux_raw)
-    return render_template('cinq-animaux.html', animaux=animaux, username=username)
+    return render_template('cinq-animaux.html', animaux=animaux,
+                           username=username)
 
 
 # Route pour l'application API
@@ -284,7 +332,9 @@ def cinq_animaux(recherche):
 def liste_animaux():
     if request.method == "GET":
         animals = get_db().get_animals()
-        data = [{"nom": each[1],"type":each[2],"race":each[3],"age":each[4],"description":each[5],"mail_proprio":each[6], "_id": each[0]} for each in animals]
+        data = [{"nom": each[1], "type":each[2], "race":each[3],
+                 "age":each[4], "description":each[5], "mail_proprio":each[6],
+                 "_id": each[0]} for each in animals]
         return jsonify(data)
 
 # # La page 404.html en cas d'erreur
@@ -318,7 +368,7 @@ def is_authenticated(session):
 def send_unauthorized():
     return Response('Could not verify your access level for that URL.\n'
                     'You have to login with proper credentials', 401,
-                    {'WWW-Authenticate': 'Basic realm="Login Required"'})    
+                    {'WWW-Authenticate': 'Basic realm="Login Required"'})
 
 
 app.secret_key = "(*&*&322387he738220)(*(*22347657"
