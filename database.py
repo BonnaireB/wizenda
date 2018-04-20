@@ -214,8 +214,17 @@ class Database:
         cursor = self.get_connexion()
         cursor.execute(("INSERT INTO Token(email, exp, now, token) "
                         "VALUES(?, ?, ?, ?)"), (email, exp, now, token,))
-        self.get_connexion().commit()        
+        self.get_connexion().commit()    
 
+    def find_token(self, token):
+        cursor = self.get_connexion().cursor()
+        cursor.execute(("SELECT email, exp, now FROM token WHERE "
+                        "token = ?"), (token,))
+        user = cursor.fetchone()
+        if user is None:
+            return None
+        else:
+            return user[0], user[1], user[2]
     # def insert_
 
     def get_animals(self):

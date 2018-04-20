@@ -324,16 +324,27 @@ def reinitialisation():
 
         db.single_token(email, exp, now, unique_token)
 
-        msg = Email(email, unique_token).send_msg(email, unique_token)
+        corps = ("Cliquez sur le lien pour réinitialiser votre mot de"
+                " passe : http://localhost:5000/reset/%s" %(unique_token))
+        msg = Email(email, corps).send_msg(email, corps)
+
         return redirect('/reinit') 
 
 
 @app.route('/reset/<token>', methods=['GET', 'POST'])
 def reset_password(token):
+
+    email = None
+    db = get_db()
+    token_exist = db.find_token(token)
+    if token_exist is not None:
+        email = token_exist[0]
+
     if request.method == "GET":
         return render_template("new-pwd.html")
     else:
-
+        mdp = request.form["password"]
+        modify_mdp(self, mdp, email):
 
         return render_template("new-pwd.html")
 
