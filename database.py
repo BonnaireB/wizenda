@@ -157,7 +157,6 @@ class Database:
             return None
         else:
             return animal
-        return animals
 
 
 
@@ -165,13 +164,13 @@ class Database:
     def get_recherche(self, recherche):
         format_recherche = recherche.lower().split()
         cursor = self.get_connexion().cursor()
-        cursor.execute(("SELECT id, description,type_animal, race FROM Animal"))
+        cursor.execute(("SELECT id, description,type_animal, race, nom_animal FROM Animal"))
         pertinent = []
         liste = cursor.fetchall()
         for e in liste :
             points = 0
             for element in format_recherche :
-                identificateurs = e[1].lower().split()+e[2].lower().split()+e[3].lower().split()
+                identificateurs = e[1].lower().split()+e[2].lower().split()+e[3].lower().split()+e[4].lower().split()
                 if element in identificateurs:
                     points = points + 1
             tuple = (e[0],points)
