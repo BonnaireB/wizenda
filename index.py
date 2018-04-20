@@ -286,6 +286,15 @@ def confirmation_animal():
     return render_template("conf-animal.html")
 
 
+# Route pour modifier son mot de passe 
+@app.route('/reset', methods=["GET", "POST"])
+def reinitialisation():
+    if request.method == "GET":
+        return render_template("reinit.html")
+    else:
+        return render_template("reinit.html") 
+
+
 @app.route('/<id>')
 def page_animal(id):
     username = None

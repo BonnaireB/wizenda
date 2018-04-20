@@ -2,7 +2,7 @@
 
 {% for n in animaux %}
 
-  <p class="flotte"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FDzMHLzMAWK9VUhLAwpjK0K2pBP7pf_EEZd1jLqEx5EKVCwi"/></p> 
+  <p class="flotte"> <img src="/image/{{ n.image }}"/></p> 
   <p class="text">
   	<a class="animal-frontpage-nom" href="{{ url_for('page_animal', id=n.id) }}">{{ n.nom }}</a>
   <br> {{ n.type_animal }} {{n.description}}
