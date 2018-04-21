@@ -296,6 +296,10 @@ def confirmation_animal():
 def confirmation_pwd():
     return render_template("conf-pwd.html")
 
+# Route qui confirme l'espace de creation d'adoption
+@app.route('/expire')
+def expire():
+    return render_template("lien-out.html")
 
 # Route pour modifier son mot de passe 
 @app.route('/reset', methods=["GET", "POST"])
@@ -322,7 +326,7 @@ def reinitialisation():
         hour = datetime.datetime.utcnow()
         now = str(hour.hour) + ":" + str(hour.minute)
 
-        db.single_token(email, exp, now, unique_token)
+        db.single_token(email, exp, unique_token)
 
         corps = ("Cliquez sur le lien pour réinitialiser votre mot de"
                 " passe : http://localhost:5000/reset/%s" %(unique_token))
@@ -333,22 +337,40 @@ def reinitialisation():
 
 @app.route('/reset/<token>', methods=['GET', 'POST'])
 def reset_password(token):
-
+    token_exist = None
     email = None
     db = get_db()
-    token_exist = db.find_token(token)
-    if token_exist is not None:
-        email = token_exist[0]
+    token_exist = db.find_token(token)    
 
     if request.method == "GET":
-        return render_template("new-pwd.html")
+
+        # Si la cle existe
+        if token_exist is not None:
+            daa = datetime.datetime.utcnow()
+            now = str(daa.hour) + ":" + str(daa.minute)
+            exp = token_exist[1]
+            hour_exp = exp.split(':')
+            hour_now = now.split(':')
+
+            if hour_exp[0] == '23' and hour_now[0] == '0':
+                return redirect('/expire')
+            elif hour_exp[0] < hour_now[0] :
+                return redirect('/expire')
+            elif hour_exp[0] == hour_now[0]:
+                if hour_exp[1] < hour_now[1]:
+                    return redirect('/expire')  
+            
+            return render_template("new-pwd.html")
+        # Si la cle n'existe pas
+        else:
+            return redirect('/expire') 
+
     else:
+        email = token_exist[0]
         mdp = request.form["password"]
-        modify_mdp(self, mdp, email):
-
-        return render_template("new-pwd.html")
-
-
+        db.modify_mdp(self, mdp, email)
+        
+        return render_template("lien-out.html", mdp=mdp)
 
 
 

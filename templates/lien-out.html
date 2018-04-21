@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <div id="inscription">
+{% if mdp %}
+
+<p> Le mot de passe a été reinitialisé. <a href="/authentification"> Connectez-vous</a>.</p>
+{% else %}
+<!-- Formulaire -->
+
+<p> Lien de réinitialisation de mot de passe expiré.</p>
+
+
+{% endif %}
+
+    </div><!-- #inscription-->
+{% endblock %}

@@ -41,7 +41,6 @@ create table Token (
   id integer NOT NULL primary key AUTOINCREMENT,
   email varchar(50) NOT NULL,
   exp varchar(50) NOT NULL, 
-  now varchar(50) NOT NULL,
   token varchar(250) NOT NULL
 );
 

@@ -210,21 +210,21 @@ class Database:
             return photo
 
     # Inserer un token pour reset le mot de passe
-    def single_token(self, email, exp, now, token):
+    def single_token(self, email, exp, token):
         cursor = self.get_connexion()
-        cursor.execute(("INSERT INTO Token(email, exp, now, token) "
-                        "VALUES(?, ?, ?, ?)"), (email, exp, now, token,))
+        cursor.execute(("INSERT INTO Token(email, exp, token) "
+                        "VALUES(?, ?, ?)"), (email, exp, token,))
         self.get_connexion().commit()    
 
     def find_token(self, token):
         cursor = self.get_connexion().cursor()
-        cursor.execute(("SELECT email, exp, now FROM token WHERE "
+        cursor.execute(("SELECT email, exp FROM token WHERE "
                         "token = ?"), (token,))
         user = cursor.fetchone()
         if user is None:
             return None
         else:
-            return user[0], user[1], user[2]
+            return user[0], user[1]
     # def insert_
 
     def get_animals(self):
