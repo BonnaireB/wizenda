@@ -19,9 +19,6 @@ class Database:
         if self.connexion is not None:
             self.connexion.close()
 
-    # def insert_animal1(self,animal):
-    #   insert_animal(animal.nom, animal.type, animal.race, animal.age, animal.email_proprio, animal.descrip)
-
     # Ajoute l'animal avec photo
     def insert_animal_photo(self, image_id, image):
         cursor = self.get_connexion()
@@ -32,14 +29,13 @@ class Database:
 
     # Insere un animal a adopter
     def insert_animal(self, nom, type_animal, race, age, email, description,
-                      image_id):
+                      adresse, image_id):
         cursor = self.get_connexion()
         cursor.execute(("INSERT INTO Animal(nom_animal, type_animal,"
-                        "race, age, mail_proprio, description, image_id) "
-                        "VALUES(?, ?, ?, ?, ?, ?, ?)"), (nom, type_animal,
-                                                         race, age, email,
-                                                         description,
-                                                         image_id))
+                        "race, age, mail_proprio, description, adresse "
+                        ", image_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)"),
+                       (nom, type_animal, race, age, email,
+                        description, adresse, image_id))
         cursor.commit()
 
     # Creer un utilisateur
@@ -214,7 +210,7 @@ class Database:
         cursor = self.get_connexion()
         cursor.execute(("INSERT INTO Token(email, exp, token) "
                         "VALUES(?, ?, ?)"), (email, exp, token,))
-        self.get_connexion().commit()    
+        self.get_connexion().commit()
 
     def find_token(self, token):
         cursor = self.get_connexion().cursor()
