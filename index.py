@@ -289,7 +289,7 @@ def confirmation_animal():
 
 
 # Route qui confirme l'espace de creation d'adoption
-@app.route('/reinit')
+@app.route('/reset_reinit')
 def confirmation_pwd():
     return render_template("conf-pwd.html")
 
@@ -301,7 +301,7 @@ def expire():
 
 
 # Route pour modifier son mot de passe
-@app.route('/reset', methods=["GET", "POST"])
+@app.route('/reinit', methods=["GET", "POST"])
 def reinitialisation():
     if request.method == "GET":
         return render_template("reinit.html")
@@ -332,7 +332,7 @@ def reinitialisation():
                  " passe : http://localhost:5000/reset/%s" % (unique_token))
         msg = Email(email, corps).send_msg(email, corps)
 
-        return redirect('/reinit')
+        return redirect('/reset_reinit')
 
 
 @app.route('/reset/<token>', methods=['GET', 'POST'])

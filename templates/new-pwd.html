@@ -6,7 +6,7 @@
 <div class="login-page">
   <div class="form">
     <p class="message">Nouveau mot de passe :</p>
-    <form class="login-form" method="POST" action="/newpwd">
+    <form method="POST" action="{{ url_for('reset_password', token=token) }}">
     	         {% if mail %}
                 <p style="color:#F03; font-size:10px;">L'email n'existe pas</p>
                 {% elif champs %}
