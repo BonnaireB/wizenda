@@ -1,5 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
+
+{% if no_animal %}
+<p> Nous sommes désolés mais il n'y a aucun petit bout de chou à adopter en ce moment </p>
+{% else %}
+
 {% for n in cinq %}
 <div class="fp-animaux">
    <p class="flotte"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FDzMHLzMAWK9VUhLAwpjK0K2pBP7pf_EEZd1jLqEx5EKVCwi" alt="{{n.nom}}"/></p>
@@ -8,4 +13,6 @@
    </p>
 </div>
 {% endfor %}
+
+{% endif %}
 {% endblock %}

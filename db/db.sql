@@ -3,6 +3,7 @@ DROP TABLE Animal;
 DROP TABLE Utilisateur;
 DROP TABLE Sessions;
 DROP TABLE Token;
+DROP TABLE Image;
 create table Animal (
   id integer NOT NULL primary key AUTOINCREMENT,
   nom_animal varchar( 20 ) NOT NULL,

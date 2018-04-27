@@ -23,7 +23,6 @@ import uuid
 import calendar
 import datetime
 
-# from .objets import *
 
 app = Flask(__name__, static_url_path="", static_folder="static")
 
@@ -50,6 +49,10 @@ def front_page():
         username = get_db().get_fname()
 
     ids = get_db().get_latest_id()
+
+    if ids is None: 
+        return render_template('accueil.html', no_animal="no",
+                                               username=username)
     liste_aleatoire = []
     for i in range(0, len(ids)):
         index = randrange(len(ids))
@@ -69,13 +72,16 @@ def connexion():
     mdp = request.form["mot_de_passe"]
 
     if email == "" or mdp == "":
-        return redirect("/authentification")
+        return render_template("authentification.html", champs="no")
 
     # Si le mail n'existe pas
     mail = get_db().get_login_info(email)
     if mail is None:
-        return render_template("authentification.html",
-                               mail="mail n'existe pas")
+        #return render_template("authentification.html",
+                               #mail="mail n'existe pas")
+        response = make_response(
+            redirect(url_for('authentification', mail=mail)))
+        return response
 
     # On verifie si le mail correspond au mot de passe
     salt = mail[0]
@@ -89,7 +95,12 @@ def connexion():
         return redirect("/mes-informations")
         # Si le mot de passe ne correspond pas, on recommence
     else:
-        return redirect('/authentification')
+        #return render_template("authentification.html",
+                               #mdp="no")
+        response = make_response(
+            redirect(url_for('authentification',
+                             mdp="no")))
+        return response
 
 
 # Redirige vers une page de connexion sur le site
@@ -141,7 +152,7 @@ def info_client():
             email = get_db().get_email(session["id"])
     else:
         return render_template('authentification.html',
-                               wrongMatricule="fx"), 401
+                               wrongMatricule="faux"), 401
 
     if request.method == "GET":
         info = get_db().get_info(email)
@@ -154,6 +165,14 @@ def info_client():
     else:
         info = get_db().get_info(email)
         username = get_db().get_fname()
+
+        mail = get_db().get_login_info(email)
+        if mail is None:
+            return render_template("authentification.html",
+                                   mail="mail n'existe pas")
+
+        # On verifie si le mail correspond au mot de passe
+        salt = mail[0]
 
         nom = request.form["nom"]
         prenom = request.form["prenom"]
@@ -175,7 +194,9 @@ def info_client():
         if ville != "":
             db.modify_ville(ville, email)
         if mdp != "":
-            db.modify_mdp(mdp, email)
+            hashed = (hashlib.sha512(str(mdp +
+                           salt).encode("utf-8")).hexdigest())
+            db.modify_mdp(hashed, email)
         if cp != "":
             regex_cp = r'[A-Za-z0-9]{6}'
             if re.match(regex_cp, cp) is None:
