@@ -36,3 +36,26 @@ function rechercher() {
     }
 
   }
+  function envoyerMail() {
+    var email = document.getElementById("email").value;
+    var champForm = document.getElementById("aside");
+    if (email === "") {
+    } else {
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            champForm.innerHTML = xhr.responseText;
+
+            champForm.value = "";
+          } else {
+            console.log('Erreur avec le serveur');
+          }
+        }
+      };
+      
+      xhr.open("GET", "/mail-sent/"+email, true);
+      xhr.send();
+    }
+
+  }

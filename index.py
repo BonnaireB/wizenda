@@ -400,6 +400,7 @@ def page_animal(id):
     email = None
     if "id" in session:
         username = get_db().get_fname()
+        email = get_db().get_email(session["id"])
 
     page = get_db().get_animal_by_id(id)
     if page is None:
@@ -408,8 +409,11 @@ def page_animal(id):
         animal = Animal(page[0], page[1], page[2],
                         page[3], page[4], page[5], page[6], page[7], page[8])
         return render_template(("animal.html"),
-                               id=id, animal=animal, username=username)
+                               id=id, animal=animal, username=username, email=email)
 
+@app.route('/mail-sent/<mail>')
+def mail_sent(mail):
+    return render_template('mail-sent.html')
 
 @app.route('/image/<id_image>.png')
 def photo(id_image):

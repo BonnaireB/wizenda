@@ -22,14 +22,13 @@
 </div>
 <div id="aside">
    <p> Contacter le propriétaire: </p>
-   <form id="contact" action="/contact" method="POST">
-      <label>Prénom : </label> <input name="prenom" type="text" />
-      <label>E-mail : <input name="email" type="email"/>
-      <label>Message : </label><input name="doc" type="textarea" placeholder="Bonjour, je suis intéressé!" rows="5" col="10" />
+      <label>Prénom : </label> <input name="prenom" type="text" /><br>
+      <label>E-mail : </label><input name="email" type="email" id="email" placeholder="{{email}}"/><br>
+      <label>Message : </label><input name="doc" id="doc" type="textarea" placeholder="Bonjour, je suis intéressé!" rows="5" col="10" /><br>
       <p class="login-button">
-         <input type="submit" name="Envoyer" value="Envoyer" id="" />
+         <input type="button" name="Envoyer" value="Envoyer" onclick="envoyerMail()" />
       </p>
-   </form>
+      <p style="display: none; color: red;" id="messageErreur">Veuillez entrer votre mail</p>
 </div>
 {% if no_animal %}
 <h1> Pas d'animal</h1>

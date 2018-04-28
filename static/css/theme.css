@@ -667,7 +667,7 @@ footer p {
 
 /* #aside */
 #aside {
-    margin-left:67% ;
+    margin-left:67%;
     background-color:#3a5199;
     color:#fff;
     padding-left: 20px;
@@ -676,7 +676,6 @@ footer p {
     padding-right:20px;
     text-align:justify;
 }
-
 /* #contact */
 #contact input {
   display: block;
