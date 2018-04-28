@@ -209,6 +209,22 @@ class Database:
             blob_image = photo[0]
             return photo
 
+    # Inserer un token pour reset le mot de passe
+    def single_token(self, email, exp, token):
+        cursor = self.get_connexion()
+        cursor.execute(("INSERT INTO Token(email, exp, token) "
+                        "VALUES(?, ?, ?)"), (email, exp, token,))
+        self.get_connexion().commit()    
+
+    def find_token(self, token):
+        cursor = self.get_connexion().cursor()
+        cursor.execute(("SELECT email, exp FROM token WHERE "
+                        "token = ?"), (token,))
+        user = cursor.fetchone()
+        if user is None:
+            return None
+        else:
+            return user[0], user[1]
     # def insert_
 
     def get_animals(self):
@@ -231,12 +247,13 @@ class Database:
             return None
         else:
             return animal
+        return animals
 
     def get_recherche(self, recherche):
         format_recherche = recherche.lower().split()
         cursor = self.get_connexion().cursor()
         cursor.execute(("SELECT id, description, type_animal,"
-                        "race FROM Animal"))
+                        "race, nom_animal FROM Animal"))
         pertinent = []
         liste = cursor.fetchall()
         for e in liste:
@@ -244,7 +261,8 @@ class Database:
             for element in format_recherche:
                 identificateurs = (e[1].lower().split() +
                                    e[2].lower().split() +
-                                   e[3].lower().split())
+                                   e[3].lower().split() +
+                                   e[4].lower().split())
                 if element in identificateurs:
                     points = points + 1
             tuple = (e[0], points)

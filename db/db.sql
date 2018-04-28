@@ -2,6 +2,7 @@
 DROP TABLE Animal;
 DROP TABLE Utilisateur;
 DROP TABLE Sessions;
+DROP TABLE Token;
 create table Animal (
   id integer NOT NULL primary key AUTOINCREMENT,
   nom_animal varchar( 20 ) NOT NULL,
@@ -33,7 +34,14 @@ create table Utilisateur (
 
 create table Sessions (
   id_session varchar(500) primary key,
-  email varchar(25) NOT NULL
+  email varchar(50) NOT NULL
+);
+
+create table Token (
+  id integer NOT NULL primary key AUTOINCREMENT,
+  email varchar(50) NOT NULL,
+  exp varchar(50) NOT NULL, 
+  token varchar(250) NOT NULL
 );
 
 

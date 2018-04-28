@@ -12,12 +12,17 @@ from flask import Response
 from functools import wraps
 from .database import Database
 from .objets import *
-from .mail import *
+from .email import *
 from flask import jsonify
+from random import *
+from uuid import uuid4
+
 import re
 import hashlib
 import uuid
-from random import *
+import calendar
+import datetime
+
 
 
 # from .objets import *
@@ -284,6 +289,90 @@ def confirmation():
 @app.route('/ok')
 def confirmation_animal():
     return render_template("conf-animal.html")
+
+
+# Route qui confirme l'espace de creation d'adoption
+@app.route('/reinit')
+def confirmation_pwd():
+    return render_template("conf-pwd.html")
+
+# Route qui confirme l'espace de creation d'adoption
+@app.route('/expire')
+def expire():
+    return render_template("lien-out.html")
+
+# Route pour modifier son mot de passe 
+@app.route('/reset', methods=["GET", "POST"])
+def reinitialisation():
+    if request.method == "GET":
+        return render_template("reinit.html")
+    else:
+        email = request.form["email"]
+
+        # On se connecte a la base de donnees
+        db = get_db()
+        verification_email = db.verification_email_existant(email)
+
+        if (verification_email != email):
+            return render_template("reinit.html",
+                                   mail="mail n'existe pas")
+
+        # On cree un unique token au hasard 
+        unique_token = str(uuid.uuid4())
+        # On decide quand est-ce que cette cle sera expire
+        expiration = datetime.datetime.utcnow() + datetime.timedelta(days=0, 
+                                                              seconds=1800)
+        exp = str(expiration.hour) + ":" + str(expiration.minute)
+        hour = datetime.datetime.utcnow()
+        now = str(hour.hour) + ":" + str(hour.minute)
+
+        db.single_token(email, exp, unique_token)
+
+        corps = ("Cliquez sur le lien pour réinitialiser votre mot de"
+                " passe : http://localhost:5000/reset/%s" %(unique_token))
+        msg = Email(email, corps).send_msg(email, corps)
+
+        return redirect('/reinit') 
+
+
+@app.route('/reset/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    token_exist = None
+    email = None
+    db = get_db()
+    token_exist = db.find_token(token)    
+
+    if request.method == "GET":
+
+        # Si la cle existe
+        if token_exist is not None:
+            daa = datetime.datetime.utcnow()
+            now = str(daa.hour) + ":" + str(daa.minute)
+            exp = token_exist[1]
+            hour_exp = exp.split(':')
+            hour_now = now.split(':')
+
+            if hour_exp[0] == '23' and hour_now[0] == '0':
+                return redirect('/expire')
+            elif hour_exp[0] < hour_now[0] :
+                return redirect('/expire')
+            elif hour_exp[0] == hour_now[0]:
+                if hour_exp[1] < hour_now[1]:
+                    return redirect('/expire')  
+            
+            return render_template("new-pwd.html")
+        # Si la cle n'existe pas
+        else:
+            return redirect('/expire') 
+
+    else:
+        email = token_exist[0]
+        mdp = request.form["password"]
+        db.modify_mdp(self, mdp, email)
+        
+        return render_template("lien-out.html", mdp=mdp)
+
+
 
 
 @app.route('/<id>')

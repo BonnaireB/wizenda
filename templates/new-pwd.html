@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+<!-- Formulaire -->
+    <div id="authentification">
+
+<div class="login-page">
+  <div class="form">
+    <p class="message">Nouveau mot de passe :</p>
+    <form class="login-form" method="POST" action="/newpwd">
+    	         {% if mail %}
+                <p style="color:#F03; font-size:10px;">L'email n'existe pas</p>
+                {% elif champs %}
+                <p style="color:#F03; font-size:10px;">Tous les champs sont obligatoires</p>
+                {% endif %}
+
+      <input type="password" name ="password" placeholder="Nouveau mot de passe"/>
+  <input type="submit" name="reinit" value="Réinitialiser"/>
+
+    </form>
+  </div>
+</div>
+
+
+    </div><!-- #authentification-->
+
+
+{% endblock %}
