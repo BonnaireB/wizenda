@@ -6,7 +6,7 @@
 <div class="login-page">
   <div class="form">
     <p class="message">Entrez votre email pour réinitialiser votre mot de passe :</p>
-    <form class="login-form" method="POST" action="/reset/<token>">
+    <form class="login-form" method="POST" action="/reinit">
     	         {% if mail %}
                 <p style="color:#F03; font-size:10px;">L'email n'existe pas</p>
                 {% elif champs %}

@@ -19,9 +19,6 @@ class Database:
         if self.connexion is not None:
             self.connexion.close()
 
-    # def insert_animal1(self,animal):
-    #   insert_animal(animal.nom, animal.type, animal.race, animal.age, animal.email_proprio, animal.descrip)
-
     # Ajoute l'animal avec photo
     def insert_animal_photo(self, image_id, image):
         cursor = self.get_connexion()
@@ -32,14 +29,13 @@ class Database:
 
     # Insere un animal a adopter
     def insert_animal(self, nom, type_animal, race, age, email, description,
-                      image_id):
+                      adresse, image_id):
         cursor = self.get_connexion()
         cursor.execute(("INSERT INTO Animal(nom_animal, type_animal,"
-                        "race, age, mail_proprio, description, image_id) "
-                        "VALUES(?, ?, ?, ?, ?, ?, ?)"), (nom, type_animal,
-                                                         race, age, email,
-                                                         description,
-                                                         image_id))
+                        "race, age, mail_proprio, description, adresse "
+                        ", image_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)"),
+                       (nom, type_animal, race, age, email,
+                        description, adresse, image_id))
         cursor.commit()
 
     # Creer un utilisateur
@@ -163,14 +159,10 @@ class Database:
 
     # Modifie le cp de l'utilisateur
     def modify_mdp(self, mdp, email):
-        salt = uuid.uuid4().hex
-        hashed_password = (hashlib.sha512(str(mdp +
-                           salt).encode("utf-8")).hexdigest())
-
         co = self.get_connexion()
         cursor = co.cursor()
-        cursor.execute(("UPDATE Utilisateur SET salt = ? AND hash = ? "
-                        "WHERE email = ?"), (salt, hashed_password, email,))
+        cursor.execute(("UPDATE Utilisateur SET hash = ? "
+                        "WHERE email = ?"), (mdp, email,))
         co.commit()
 
     # Inserer une session courante
@@ -214,7 +206,7 @@ class Database:
         cursor = self.get_connexion()
         cursor.execute(("INSERT INTO Token(email, exp, token) "
                         "VALUES(?, ?, ?)"), (email, exp, token,))
-        self.get_connexion().commit()    
+        self.get_connexion().commit()
 
     def find_token(self, token):
         cursor = self.get_connexion().cursor()
@@ -225,20 +217,25 @@ class Database:
             return None
         else:
             return user[0], user[1]
-    # def insert_
-
+    
+    # Requete pour prendre toutes les informations de l'animal
     def get_animals(self):
         cursor = self.get_connexion().cursor()
         cursor.execute(("SELECT * FROM Animal"))
         animals = cursor.fetchall()
         return animals
 
+    # Requete pour prendre l'id d'un animal
     def get_latest_id(self):
         cursor = self.get_connexion().cursor()
         cursor.execute(("SELECT id FROM Animal"))
         ids = cursor.fetchall()
-        return ids
+        if ids is None:
+            return None
+        else:
+            return ids
 
+    # Requete pour prendre toutes les infos d'un animal selon l'id
     def get_animal_by_id(self, id):
         cursor = self.get_connexion().cursor()
         cursor.execute(("SELECT * FROM Animal WHERE id=?"), (id,))
@@ -249,6 +246,7 @@ class Database:
             return animal
         return animals
 
+    # Requete pour la recherche d'animaux
     def get_recherche(self, recherche):
         format_recherche = recherche.lower().split()
         cursor = self.get_connexion().cursor()

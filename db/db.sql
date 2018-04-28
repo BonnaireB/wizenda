@@ -3,6 +3,7 @@ DROP TABLE Animal;
 DROP TABLE Utilisateur;
 DROP TABLE Sessions;
 DROP TABLE Token;
+DROP TABLE Image;
 create table Animal (
   id integer NOT NULL primary key AUTOINCREMENT,
   nom_animal varchar( 20 ) NOT NULL,
@@ -11,6 +12,7 @@ create table Animal (
   age integer NOT NULL,
   description text NOT NULL,
   mail_proprio text NOT NULL,
+  adresse text NOT NULL,
   image_id varchar(32)
 );
 
@@ -45,12 +47,12 @@ create table Token (
 );
 
 
-insert into Animal (nom_animal,type_animal,race,age,description,mail_proprio) values ("Bibi","Chat","Siamois",4,"petit mignon calin chaton beau male", "victorinf3005@gmail.com");
-insert into Animal (nom_animal,type_animal,race,age,description,mail_proprio) values ("Bobo","Chien","Errant",12,"gros violent sanguinaire", "marcinf3005@gmail.com");
-insert into Animal (nom_animal,type_animal,race,age,description,mail_proprio) values ("Vino","Chat","créole",11,"gros matou male chat sensible","mathieuinf3005@gmail.com");
-insert into Animal (nom_animal,type_animal,race,age,description,mail_proprio) values ("Link","Ecureuil","allemand",1,"petit mignon coquin beau male", "subaninf3005@gmail.com");
-insert into Animal (nom_animal,type_animal,race,age,description,mail_proprio) values ("Mario","Tortue","muette",119,"timide sanguinaire calin myope male", "nintendoinf3005@gmail.com");
-insert into Animal (nom_animal,type_animal,race,age,description,mail_proprio) values ("Sonic","Herisson","Piquant",44,"vieux Herisson Grincheux sublime male", "segainf3005@gmail.com");
+insert into Animal (nom_animal,type_animal,race,age,description,mail_proprio, adresse) values ("Bibi","Chat","Siamois",4,"petit mignon calin chaton beau male", "victorinf3005@gmail.com", "Montreal");
+insert into Animal (nom_animal,type_animal,race,age,description,mail_proprio, adresse) values ("Bobo","Chien","Errant",12,"gros violent sanguinaire", "marcinf3005@gmail.com", "Montreal");
+insert into Animal (nom_animal,type_animal,race,age,description,mail_proprio, adresse) values ("Vino","Chat","créole",11,"gros matou male chat sensible","mathieuinf3005@gmail.com", "Montreal");
+insert into Animal (nom_animal,type_animal,race,age,description,mail_proprio, adresse) values ("Link","Ecureuil","allemand",1,"petit mignon coquin beau male", "subaninf3005@gmail.com", "Montreal");
+insert into Animal (nom_animal,type_animal,race,age,description,mail_proprio, adresse) values ("Mario","Tortue","muette",119,"timide sanguinaire calin myope male", "nintendoinf3005@gmail.com", "Montreal");
+insert into Animal (nom_animal,type_animal,race,age,description,mail_proprio, adresse) values ("Sonic","Herisson","Piquant",44,"vieux Herisson Grincheux sublime male", "segainf3005@gmail.com", "Montreal");
 
 insert into Utilisateur (nom,prenom,email,salt,hash,num_de_tel,adresse,ville,cp) values ("Sophie","Ph","so.phouangsy@gmail.com","73ef09812fa2475cbd063b19cdc230da","3c1afccc289e53dd53922ef100d5b2e96d00036f876583e538653fd2b4bd25e00ce93dc49c926ff6121631cbc2198734bcd6853687170f6fdfb3237de79bf66c","0648244857","2789 Rue Gamelin", "Montreal", "H4C 3X2");
 insert into Utilisateur (nom,prenom,email,salt,hash,num_de_tel,adresse,ville,cp) values ("Marcelin","Victor","victorinf3005@gmail.com","x3411234sbhbd","s3443b3451n2342b121","514-555 5555","2789 Rue Gamelin", "Montreal", "H4C 3X2");

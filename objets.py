@@ -1,6 +1,6 @@
 class Animal:
     def __init__(self, id, nom, type_animal, race, age, description,
-                 email_proprio, image):
+                 email_proprio, adresse, image):
         self.id = id
         self.nom = nom
         self.type_animal = type_animal
@@ -9,11 +9,12 @@ class Animal:
         self.description = description
         self.email_proprio = email_proprio
         self.image = image
+        self.adresse = adresse
 
     def init_list(list):
         liste_animaux = []
         for x in list:
-            new = Animal(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7])
+            new = Animal(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8])
             liste_animaux.append(new)
         return liste_animaux
 class Personne:

@@ -24,9 +24,6 @@ import calendar
 import datetime
 
 
-
-# from .objets import *
-
 app = Flask(__name__, static_url_path="", static_folder="static")
 
 
@@ -52,6 +49,10 @@ def front_page():
         username = get_db().get_fname()
 
     ids = get_db().get_latest_id()
+
+    if ids is None: 
+        return render_template('accueil.html', no_animal="no",
+                                               username=username)
     liste_aleatoire = []
     for i in range(0, len(ids)):
         index = randrange(len(ids))
@@ -71,13 +72,16 @@ def connexion():
     mdp = request.form["mot_de_passe"]
 
     if email == "" or mdp == "":
-        return redirect("/authentification")
+        return render_template("authentification.html", champs="no")
 
     # Si le mail n'existe pas
     mail = get_db().get_login_info(email)
     if mail is None:
-        return render_template("authentification.html",
-                               mail="mail n'existe pas")
+        #return render_template("authentification.html",
+                               #mail="mail n'existe pas")
+        response = make_response(
+            redirect(url_for('authentification', mail=mail)))
+        return response
 
     # On verifie si le mail correspond au mot de passe
     salt = mail[0]
@@ -91,7 +95,12 @@ def connexion():
         return redirect("/mes-informations")
         # Si le mot de passe ne correspond pas, on recommence
     else:
-        return redirect('/authentification')
+        #return render_template("authentification.html",
+                               #mdp="no")
+        response = make_response(
+            redirect(url_for('authentification',
+                             mdp="no")))
+        return response
 
 
 # Redirige vers une page de connexion sur le site
@@ -143,7 +152,7 @@ def info_client():
             email = get_db().get_email(session["id"])
     else:
         return render_template('authentification.html',
-                               wrongMatricule="fx"), 401
+                               wrongMatricule="faux"), 401
 
     if request.method == "GET":
         info = get_db().get_info(email)
@@ -156,6 +165,14 @@ def info_client():
     else:
         info = get_db().get_info(email)
         username = get_db().get_fname()
+
+        mail = get_db().get_login_info(email)
+        if mail is None:
+            return render_template("authentification.html",
+                                   mail="mail n'existe pas")
+
+        # On verifie si le mail correspond au mot de passe
+        salt = mail[0]
 
         nom = request.form["nom"]
         prenom = request.form["prenom"]
@@ -177,7 +194,9 @@ def info_client():
         if ville != "":
             db.modify_ville(ville, email)
         if mdp != "":
-            db.modify_mdp(mdp, email)
+            hashed = (hashlib.sha512(str(mdp +
+                           salt).encode("utf-8")).hexdigest())
+            db.modify_mdp(hashed, email)
         if cp != "":
             regex_cp = r'[A-Za-z0-9]{6}'
             if re.match(regex_cp, cp) is None:
@@ -214,10 +233,11 @@ def adoption():
         race = request.form["race"]
         age = request.form["age"]
         description = request.form["description"]
+        addr = request.form["adresse"]
 
         # Si des champs sont vides
         if (nom_animal == "" or type_animal == "" or race == "" or age == ""
-            or description == ""):
+           or description == "" or addr == ""):
             return render_template("adoption.html", error="obligatoires")
 
         image = None
@@ -226,13 +246,11 @@ def adoption():
             image = request.files["photo"]
             image_id = str(uuid.uuid4().hex)
 
-
         db = get_db()
-        db.insert_animal(nom_animal, type_animal,
-                         race, age, email, description, image_id)
+        db.insert_animal(nom_animal, type_animal, race,
+                         age, email, description, addr, image_id)
         if image_id is not None:
             db.insert_animal_photo(image_id, image)
-
 
         return redirect("/ok")
 
@@ -264,7 +282,7 @@ def inscription():
 
         # Si des champs sont vides
         if (nom == "" or prenom == "" or email == "" or mdp == ""
-            or num_tel == "" or adresse == "" or ville == "" or cp == ""):
+           or num_tel == "" or adresse == "" or ville == "" or cp == ""):
             return render_template("inscription.html",
                                    error="Tous les champs sont obligatoires.")
         elif re.match(regex_cp, cp) is None:
@@ -292,17 +310,19 @@ def confirmation_animal():
 
 
 # Route qui confirme l'espace de creation d'adoption
-@app.route('/reinit')
+@app.route('/reset_reinit')
 def confirmation_pwd():
     return render_template("conf-pwd.html")
+
 
 # Route qui confirme l'espace de creation d'adoption
 @app.route('/expire')
 def expire():
     return render_template("lien-out.html")
 
-# Route pour modifier son mot de passe 
-@app.route('/reset', methods=["GET", "POST"])
+
+# Route pour modifier son mot de passe
+@app.route('/reinit', methods=["GET", "POST"])
 def reinitialisation():
     if request.method == "GET":
         return render_template("reinit.html")
@@ -317,11 +337,12 @@ def reinitialisation():
             return render_template("reinit.html",
                                    mail="mail n'existe pas")
 
-        # On cree un unique token au hasard 
+        # On cree un unique token au hasard
         unique_token = str(uuid.uuid4())
         # On decide quand est-ce que cette cle sera expire
-        expiration = datetime.datetime.utcnow() + datetime.timedelta(days=0, 
-                                                              seconds=1800)
+        expiration = (datetime.datetime.utcnow() +
+                      datetime.timedelta(days=0,
+                                         seconds=1800))
         exp = str(expiration.hour) + ":" + str(expiration.minute)
         hour = datetime.datetime.utcnow()
         now = str(hour.hour) + ":" + str(hour.minute)
@@ -329,10 +350,10 @@ def reinitialisation():
         db.single_token(email, exp, unique_token)
 
         corps = ("Cliquez sur le lien pour réinitialiser votre mot de"
-                " passe : http://localhost:5000/reset/%s" %(unique_token))
+                 " passe : http://localhost:5000/reset/%s" % (unique_token))
         msg = Email(email, corps).send_msg(email, corps)
 
-        return redirect('/reinit') 
+        return redirect('/reset_reinit')
 
 
 @app.route('/reset/<token>', methods=['GET', 'POST'])
@@ -340,7 +361,7 @@ def reset_password(token):
     token_exist = None
     email = None
     db = get_db()
-    token_exist = db.find_token(token)    
+    token_exist = db.find_token(token)
 
     if request.method == "GET":
 
@@ -354,25 +375,23 @@ def reset_password(token):
 
             if hour_exp[0] == '23' and hour_now[0] == '0':
                 return redirect('/expire')
-            elif hour_exp[0] < hour_now[0] :
+            elif hour_exp[0] < hour_now[0]:
                 return redirect('/expire')
             elif hour_exp[0] == hour_now[0]:
                 if hour_exp[1] < hour_now[1]:
-                    return redirect('/expire')  
-            
+                    return redirect('/expire')
+
             return render_template("new-pwd.html")
         # Si la cle n'existe pas
         else:
-            return redirect('/expire') 
+            return redirect('/expire')
 
     else:
         email = token_exist[0]
         mdp = request.form["password"]
         db.modify_mdp(self, mdp, email)
-        
+
         return render_template("lien-out.html", mdp=mdp)
-
-
 
 
 @app.route('/<id>')
@@ -387,7 +406,7 @@ def page_animal(id):
         return render_template(("404.html"))
     else:
         animal = Animal(page[0], page[1], page[2],
-                        page[3], page[4], page[5], page[6], page[7])
+                        page[3], page[4], page[5], page[6], page[7], page[8])
         return render_template(("animal.html"),
                                id=id, animal=animal, username=username)
 
@@ -423,7 +442,7 @@ def liste_animaux():
         animals = get_db().get_animals()
         data = [{"nom": each[1], "type":each[2], "race":each[3],
                  "age":each[4], "description":each[5], "mail_proprio":each[6],
-                 "_id": each[0]} for each in animals]
+                 "adresse": each[7], "_id": each[0]} for each in animals]
         return jsonify(data)
 
 # # La page 404.html en cas d'erreur
