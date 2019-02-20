@@ -49,20 +49,7 @@ def front_page():
         username = get_db().get_fname()
 
     ids = get_db().get_latest_id()
-
-    if ids is None: 
-        return render_template('accueil.html', no_animal="no",
-                                               username=username)
-    liste_aleatoire = []
-    for i in range(0, len(ids)):
-        index = randrange(len(ids))
-        animal = get_db().get_animal_by_id(int(ids[index][0]))
-        ids[index] = ids[-1]
-        del ids[-1]
-        liste_aleatoire.append(animal)
-    liste_animaux = Animal.init_list(liste_aleatoire)
-    return render_template('accueil.html', cinq=liste_animaux[:5],
-                           username=username)
+    return render_template('accueil.html')
 
 
 # Récupère les données de connexion et redirige l'utilisateur a l'index

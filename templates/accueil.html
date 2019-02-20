@@ -1,18 +1,68 @@
 {% extends "layout.html" %}
 {% block content %}
 
-{% if no_animal %}
-<p> Nous sommes désolés mais il n'y a aucun petit bout de chou à adopter en ce moment </p>
-{% else %}
 
-{% for n in cinq %}
-<div class="fp-animaux">
-   <p class="flotte"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4FDzMHLzMAWK9VUhLAwpjK0K2pBP7pf_EEZd1jLqEx5EKVCwi" alt="{{n.nom}}"/></p>
-   <p class="text"><a class="animal-frontpage-nom" href="{{ url_for('page_animal', id=n.id) }}">{{ n.nom }}</a><br>
-      {{ n.type_animal }} {{n.race}}
-   </p>
+
+
+<div id="calendar">
+   <script>
+      var Calendar = tui.Calendar;
+      var calendar = new Calendar('#calendar', {
+
+      // 'day', 'week', 'month'
+      defaultView: 'week',
+  
+      // shows the milestone and task in weekly, daily view
+      taskView: true,
+  
+      // shows the all day and time grid in weekly, daily view
+      scheduleView: true,
+  
+      // template options
+      template: {
+        milestone: function(schedule) {
+          return '<span style="color:red;"><i class="fa fa-flag"></i> ' + schedule.title + '</span>';
+        },
+        milestoneTitle: function() {
+          return 'Milestone';
+        },
+        task: function(schedule) {
+          return '&nbsp;&nbsp;#' + schedule.title;
+        },
+        taskTitle: function() {
+          return '<label><input type="checkbox" />Task</label>';
+        },
+        allday: function(schedule) {
+          return schedule.title + ' <i class="fa fa-refresh"></i>';
+        },
+        alldayTitle: function() {
+          return 'All Day';
+        },
+        time: function(schedule) {
+          return schedule.title + ' <i class="fa fa-refresh"></i>' + schedule.start;
+        }
+      },
+      week: {
+        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        startDayOfWeek: 0,
+        narrowWeekend: true
+      },
+      month: {
+        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        startDayOfWeek: 0,
+        narrowWeekend: true
+      },
+  
+      // list of Calendars that can be used to add new schedule
+      calendars: [],
+  
+      // whether use default creation popup or not
+      useCreationPopup: false,
+  
+      // whether use default detail popup or not
+      useDetailPopup: false
+      
+  });</script>
 </div>
-{% endfor %}
 
-{% endif %}
 {% endblock %}

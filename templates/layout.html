@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="fr">
    <head>
-      <title> Kijijanimals </title>
+      <title> WIZENDA </title>
       <meta charset="UTF-8">
       <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet"  >
-      <script src="{{ url_for('static', filename='javascript/script.js') }}"></script>
+      <!-- <script src="{{ url_for('static', filename='javascript/script.js') }}"></script> -->
+      <link rel="stylesheet" href="{{ url_for('static', filename='/javascript/node_modules/tui-calendar/dist/tui-calendar.css') }}">
+      <script src="{{ url_for('static', filename='/javascript/node_modules/tui-calendar/dist/tui-calendar.js') }}"></script>
    </head>
-   <body >
+   <body>
       <div id="inside">
          <header>
             <div id="connexion">
                {% if username %}
-               <div> Bonjour {{username}} &nbsp; | &nbsp; <a href="/mes-informations">Mon compte</a> &nbsp; | &nbsp; <a href="/adoption">Mettre en adoption</a> &nbsp; | &nbsp; <a href="/logout">Déconnexion</a> </div>
+               <div> Bonjour {{username}} &nbsp; | &nbsp; <a href="/mes-informations">Mon compte</a> &nbsp; | &nbsp; <a href="/logout">Déconnexion</a> </div>
                {% else %}
                <form action="/" method="POST">
                   <div> <label for="email" class="email"> E-mail : </label> </div>
@@ -27,7 +29,7 @@
             </div>
             <div id="head">
                <a href="/">
-                  <h1> Kijijanimals </h1>
+                  <h1> WIZENDA </h1>
                </a>
                <h2> Le meilleur moyen de se faire de nouveaux amis </h2>
             </div>

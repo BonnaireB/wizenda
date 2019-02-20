@@ -1,18 +1,13 @@
 body {
-    color: rosybrown;
     margin: auto;
     font-family: "Verdana", Arial, sans-serif;
     font-size: 12px;
-    background-color: #d6d7d2;
-    background-color: #fff;
-    border-style: solid;
-    background-image: url("/../images/pets_background_dogs_bone_icons_decoration_repeating_style_6828678.jpg");
+    background-image: url("/../images/background.jpg");
 }
 
 #inside {
-    padding: 2% 10% 0%10% ;
-    border-style: solid;
-    background-color: whitesmoke;
+    padding: 4% 10% 0%10% ;
+    background-color: transparent;
     background-clip: content-box;
 }
 
@@ -81,7 +76,7 @@ img {
 }
 
 header {
-    background-color: rosybrown;
+    background-color: transparent;
     text-align: center;
     margin-bottom: 100px;
     padding-top: 10px;
@@ -354,7 +349,8 @@ p.login-button {
 
 footer {
     height: 50px;
-    background-color: rosybrown;
+    background-blend-mode: soft-light;
+    background-color: transparent;
     margin-bottom: 100px;
     padding-top: 10px;
     padding-bottom: 10px;
