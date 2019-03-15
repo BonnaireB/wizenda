@@ -47,9 +47,7 @@ def front_page():
     username = None
     if "id" in session:
         username = get_db().get_fname()
-
-    ids = get_db().get_latest_id()
-    return render_template('accueil.html')
+    return render_template('accueil.html',username = username)
 
 
 # Récupère les données de connexion et redirige l'utilisateur a l'index
@@ -64,8 +62,8 @@ def connexion():
     # Si le mail n'existe pas
     mail = get_db().get_login_info(email)
     if mail is None:
-        #return render_template("authentification.html",
-                               #mail="mail n'existe pas")
+        return render_template("authentification.html",
+                               mail="mail n'existe pas")
         response = make_response(
             redirect(url_for('authentification', mail=mail)))
         return response
@@ -82,8 +80,6 @@ def connexion():
         return redirect("/mes-informations")
         # Si le mot de passe ne correspond pas, on recommence
     else:
-        #return render_template("authentification.html",
-                               #mdp="no")
         response = make_response(
             redirect(url_for('authentification',
                              mdp="no")))
@@ -162,36 +158,15 @@ def info_client():
         salt = mail[0]
 
         nom = request.form["nom"]
-        prenom = request.form["prenom"]
         mdp = request.form["mdp"]
-        num_tel = request.form["tel"]
-        adresse = request.form["addr"]
-        ville = request.form["ville"]
-        cp = request.form["CP"]
 
         db = get_db()
         if nom != "":
             db.modify_name(nom, email)
-        if prenom != "":
-            db.modify_fname(prenom, email)
-        if num_tel != "":
-            db.modify_num(prenom, email)
-        if adresse != "":
-            db.modify_addr(adresse, email)
-        if ville != "":
-            db.modify_ville(ville, email)
         if mdp != "":
             hashed = (hashlib.sha512(str(mdp +
                            salt).encode("utf-8")).hexdigest())
             db.modify_mdp(hashed, email)
-        if cp != "":
-            regex_cp = r'[A-Za-z0-9]{6}'
-            if re.match(regex_cp, cp) is None:
-                return render_template("info-client.html", wrong="Wrong",
-                                       username=username,
-                                       infos=info)
-
-            db.modify_cp(cp, email)
 
         info = get_db().get_info(email)
         username = get_db().get_fname()
@@ -200,46 +175,6 @@ def info_client():
                                email=email, infos=info)
 
 
-# Route pour faire adopter un animal
-@app.route('/adoption', methods=["GET", "POST"])
-def adoption():
-    username = None
-    email = None
-    if "id" in session:
-        email = get_db().get_email(session["id"])
-        username = get_db().get_fname()
-    else:
-        return render_template('authentification.html',
-                               wrongMatricule="fx"), 401
-
-    if request.method == "GET":
-            return render_template("adoption.html", username=username)
-    else:
-        nom_animal = request.form["nom_animal"]
-        type_animal = request.form["type_animal"]
-        race = request.form["race"]
-        age = request.form["age"]
-        description = request.form["description"]
-        addr = request.form["adresse"]
-
-        # Si des champs sont vides
-        if (nom_animal == "" or type_animal == "" or race == "" or age == ""
-           or description == "" or addr == ""):
-            return render_template("adoption.html", error="obligatoires")
-
-        image = None
-        image_id = None
-        if "photo" in request.files:
-            image = request.files["photo"]
-            image_id = str(uuid.uuid4().hex)
-
-        db = get_db()
-        db.insert_animal(nom_animal, type_animal, race,
-                         age, email, description, addr, image_id)
-        if image_id is not None:
-            db.insert_animal_photo(image_id, image)
-
-        return redirect("/ok")
 
 
 # Route qui permet l'inscription d'un nouvel utilisateur
@@ -253,33 +188,26 @@ def inscription():
     else:
         # On recupere toutes les donnees
         nom = request.form["nom"]
-        prenom = request.form["prenom"]
         email = request.form["email"]
         mdp = request.form["mdp"]
-        num_tel = request.form["tel"]
-        adresse = request.form["addr"]
-        ville = request.form["ville"]
-        cp = request.form["CP"]
 
         # On se connecte a la base de donnees
         db = get_db()
         verification_email = db.verification_email_existant(email)
 
-        regex_cp = r'[A-Za-z0-9]{6}'
+        # # regex_cp = r'[A-Za-z0-9]{6}'
 
         # Si des champs sont vides
-        if (nom == "" or prenom == "" or email == "" or mdp == ""
-           or num_tel == "" or adresse == "" or ville == "" or cp == ""):
+        if (nom == "" or email == "" or mdp == ""):
             return render_template("inscription.html",
                                    error="Tous les champs sont obligatoires.")
-        elif re.match(regex_cp, cp) is None:
-            return render_template("inscription.html", wrong="Wrong")
+        
 
         if (verification_email == email):
             return render_template("inscription.html",
                                    email="mail existe deja")
 
-        db.create_user(nom, prenom, email, mdp, num_tel, adresse, ville, cp)
+        db.create_user(nom, email, mdp)
 
         return redirect("/confirmation")
 
@@ -381,22 +309,6 @@ def reset_password(token):
         return render_template("lien-out.html", mdp=mdp)
 
 
-@app.route('/<id>')
-def page_animal(id):
-    username = None
-    email = None
-    if "id" in session:
-        username = get_db().get_fname()
-        email = get_db().get_email(session["id"])
-
-    page = get_db().get_animal_by_id(id)
-    if page is None:
-        return render_template(("404.html"))
-    else:
-        animal = Animal(page[0], page[1], page[2],
-                        page[3], page[4], page[5], page[6], page[7], page[8])
-        return render_template(("animal.html"),
-                               id=id, animal=animal, username=username, email=email)
 
 @app.route('/mail-sent/<mail>')
 def mail_sent(mail):
@@ -414,16 +326,16 @@ def photo(id_image):
     return response
 
 
-@app.route('/cinq-animaux/<recherche>')
-def cinq_animaux(recherche):
+# @app.route('/cinq-animaux/<recherche>')
+# def cinq_animaux(recherche):
     username = None
     if "id" in session:
         username = get_db().get_fname()
 
-    animaux_raw = get_db().get_recherche(recherche)
-    animaux = Animal.init_list(animaux_raw)
-    return render_template('cinq-animaux.html', animaux=animaux,
-                           username=username)
+#     animaux_raw = get_db().get_recherche(recherche)
+#     animaux = Animal.init_list(animaux_raw)
+#     return render_template('cinq-animaux.html', animaux=animaux,
+#                            username=username)
 
 
 # Route pour l'application API

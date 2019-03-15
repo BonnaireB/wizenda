@@ -2,17 +2,22 @@ body {
     margin: auto;
     font-family: "Verdana", Arial, sans-serif;
     font-size: 12px;
-    background-image: url("/../images/background.jpg");
+    background-color: rgba(255, 255,255);
+}
+body p{
+    font-family: "Georgia", Arial, serif;
+    font-size: 11px;
+    color:#000000;
 }
 
 #inside {
-    padding: 4% 10% 0%10% ;
+    padding: 20px 0 70px;
     background-color: transparent;
     background-clip: content-box;
 }
 
 a {
-    color: lightcoral;
+    color: rgb(208, 191, 60);
     font-size: 21px;
     text-decoration: none;
     font-weight: 700;
@@ -81,7 +86,7 @@ header {
     margin-bottom: 100px;
     padding-top: 10px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #D0D0D0;
+    border-bottom: 1px solid rgb(208, 191, 60);
 }
 
 header h1 {
@@ -170,7 +175,7 @@ header h2 {
   margin: 0 auto 100px;
   padding: 45px;
   text-align: center;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1), 0 5px 5px 0 rgba(255, 239, 239, 0.2);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1), 0 5px 5px 0 rgb(208, 191, 60);
 }
 .login-form input[type="text"] {
   font-family: "Roboto", sans-serif;
@@ -199,7 +204,7 @@ header h2 {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
   outline: 0;
-  background: #3a5199;
+  background: rgb(208, 191, 60);
   width: 100%;
   border: 0;
   padding: 15px;
@@ -688,7 +693,7 @@ border:none;
 /* #erreur404 */
 
 #erreur404 a {
-    color: #0d2652;
+    color: rgb(208, 191, 60);
 }
 
 #erreur404 a:hover {
@@ -700,4 +705,5 @@ border:none;
     text-transform: uppercase;
     font-size: 14px;
     font-weight: bold;
+
 }

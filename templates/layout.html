@@ -3,54 +3,64 @@
    <head>
       <title> WIZENDA </title>
       <meta charset="UTF-8">
-      <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet"  >
-      <!-- <script src="{{ url_for('static', filename='javascript/script.js') }}"></script> -->
-      <link rel="stylesheet" href="{{ url_for('static', filename='/javascript/node_modules/tui-calendar/dist/tui-calendar.css') }}">
-      <script src="{{ url_for('static', filename='/javascript/node_modules/tui-calendar/dist/tui-calendar.js') }}"></script>
+      <link href="{{ url_for('static', filename='css/bootstrap-4/css/bootstrap.css') }}" rel="stylesheet"  >
+      <script src="{{ url_for('static', filename='javascript/script.js') }}"></script>
+   
    </head>
    <body>
-      <div id="inside">
-         <header>
-            <div id="connexion">
+      <!-- <div id="inside"> -->
+         <nav class="navbar fixed-top navbar-light bg-light">
+            <div class="navbar-brand" id="connexion">
                {% if username %}
-               <div> Bonjour {{username}} &nbsp; | &nbsp; <a href="/mes-informations">Mon compte</a> &nbsp; | &nbsp; <a href="/logout">Déconnexion</a> </div>
+               <div> 
+                  <p> {{username}} &nbsp; | &nbsp; <a href="/mes-informations">Mon compte</a> &nbsp; | &nbsp; <a href="/logout">Déconnexion</a> 
+                  </p>
+               </div>
+               <div style="padding-left: 5%;">
+                  <a  href="/">
+                  <h1 class="h3" > WIZENDA </h1>
+               </a>
+            </div>
                {% else %}
-               <form action="/" method="POST">
-                  <div> <label for="email" class="email"> E-mail : </label> </div>
-                  <div> <input id="input" name="email" type="text" /> </div>
-                  <div> <label for="mot_de_passe" class="motDePasse"> Mot de passe : </label></div>
-                  <div> <input id="inp" name="mot_de_passe" type="password" /> </div>
-                  <div> 
-                     <input type="submit" name="seConnecter" value="Se connecter" id="seConnecter" />
+               <form class="form-inline" action="/" method="POST">
+                  <div class="form-group row">
+                     <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+                     <div class="col-sm-10"> 
+                        <input class="form-control-plaintext" name="email" type="text" /> 
+                     </div>
+                  </div>
+                  <div class="form-group mx-sm-3 mb-2">
+                        <label for="inputPassword2" >Mot de passe :</label>
+                        <input class="form-control" id="inputPassword" name="mot_de_passe" type="password" /> 
+                        </div>
+                     <button class="btn btn-primary mb-2" type="submit" name="seConnecter" >Se connecter</button>
+                     <div> &nbsp; | &nbsp; <a style="font-size: 12px" href="/inscription"> Pas encore inscrit?</a> 
+                        &nbsp; | &nbsp; <a  style="font-size: 12px" href="/reinit"> Mot de passe oublié</a></div>
+                     <div style="padding-left: 5%;">
+                        <a  href="/">
+                        <h1 class="h3" > WIZENDA </h1>
+                     </a>
                   </div>
                </form>
-               <div> &nbsp; | &nbsp; <a href="/inscription"> Pas encore inscrit?</a> &nbsp; | &nbsp; <a href="/reinit"> Mot de passe oublié</a> &nbsp; | &nbsp; <a href="/adoption"> Mettre en adoption </a> </div>
+               
                {% endif %} 
             </div>
-            <div id="head">
-               <a href="/">
-                  <h1> WIZENDA </h1>
-               </a>
-               <h2> Le meilleur moyen de se faire de nouveaux amis </h2>
-            </div>
-            <div class="recherche">
-               <label id="recherche-label">Recherche</label>
-               <input type="text" name="recherche" id="recherche">
-               <input type="button" value="OK" name="envoyer" onclick="rechercher()">
-            </div>
-         </header>
+              
+         </nav>
 
-         <div id="content">
+         <div style="padding: 10% 10% 10% 10%;" class="container-fluid">
             {% block content %}{% endblock %}
          </div>
          
          <!-- #content -->
-         <footer>
-            <p>
-               © 2018  — Designed By 
-               <b>Sophie Phouangsy</b> and <b>Benjamin Bonnaire</b> dans le cadre d'un projet pour le cours INF3005
-            </p>
-         </footer>
+         <div " class="card text-center">
+               <div class="card-header">
+               <p class="card-text">
+               © 2019  — Designed By 
+               Benjamin Bonnaire dans le cadre d'un projet pour le cours INM5151
+               </p>
+               </div>
+         </div>
       </div>
    </body>
 </html>
