@@ -212,6 +212,9 @@ def inscription():
         return redirect("/confirmation")
 
 
+@app.route('/test')
+def test_calendrier():
+    return render_template("tester_calendar.html")
 # Route qui confirme l'inscription d'un utilisateur
 @app.route('/confirmation')
 def confirmation():
@@ -314,39 +317,12 @@ def reset_password(token):
 def mail_sent(mail):
     return render_template('mail-sent.html')
 
-@app.route('/image/<id_image>.png')
-def photo(id_image):
-    db = get_db()
-    binary_data = db.load_picture(id_image)
-    if binary_data is None:
-        return Response(status=404)
-    else:
-        response = make_response(binary_data)
-        response.headers.set('Content-Type', 'image/png')
-    return response
-
-
-# @app.route('/cinq-animaux/<recherche>')
-# def cinq_animaux(recherche):
-    username = None
-    if "id" in session:
-        username = get_db().get_fname()
-
-#     animaux_raw = get_db().get_recherche(recherche)
-#     animaux = Animal.init_list(animaux_raw)
-#     return render_template('cinq-animaux.html', animaux=animaux,
-#                            username=username)
 
 
 # Route pour l'application API
-@app.route('/api/animals/', methods=["GET"])
-def liste_animaux():
-    if request.method == "GET":
-        animals = get_db().get_animals()
-        data = [{"nom": each[1], "type":each[2], "race":each[3],
-                 "age":each[4], "description":each[5], "mail_proprio":each[6],
-                 "adresse": each[7], "_id": each[0]} for each in animals]
-        return jsonify(data)
+# @app.route('/api/agenda/', methods=["GET"])
+# def agenda():
+
 
 # # La page 404.html en cas d'erreur
 # @app.errorhandler(404)
