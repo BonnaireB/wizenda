@@ -1,4 +1,7 @@
-# tp2_inf3005
+# PROJET WIZENDA
+
+CE projet consiste en une application web Python Flask quie permet aux utilisateurs de disposer d'un agenda spécial.
+Cet agenda propose des fonctionnalités particulières, tel que la génération d'un agenda en fonction de leur obligation et leurs objectifs.
 
 Courriel
 Le fichier de configuration se trouve dans le repertoire principal, le nom du fichier est : email.py
