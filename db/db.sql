@@ -7,9 +7,7 @@ create table Evenement (
   id integer NOT NULL primary key AUTOINCREMENT,
   nom_event varchar( 20 ) NOT NULL,
   type_event varchar(15) NOT NULL,
-  description text NOT NULL,
-  mail_proprio text NOT NULL,
-  adresse text
+  description text NOT NULL
 );
 
 
