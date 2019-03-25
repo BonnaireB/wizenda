@@ -1,4 +1,3 @@
-# PHOUANGSY SOPHIE PHOS06609507
 # BONNAIRE BENJAMIN BONB03049706
 from flask import Flask
 from flask import render_template

@@ -5,20 +5,24 @@ DROP TABLE Token;
 DROP TABLE Evenement;
 create table Evenement (
   id integer NOT NULL primary key AUTOINCREMENT,
-  nom_event varchar( 20 ) NOT NULL,
-  type_event varchar(15) NOT NULL,
-  description text NOT NULL,
-  mail_proprio text NOT NULL,
-  adresse text
+  nom_event varchar( 40 ) NOT NULL,
+  recurrent integer,
+  description text NOT NULL
+
 );
 
+create table Agenda (
+  agendaid integer NOT NULL primary key AUTOINCREMENT
+);
 
 create table Utilisateur (
   id integer NOT NULL primary key AUTOINCREMENT,
   nom varchar(30) NOT NULL,
   email varchar(50) NOT NULL,
   salt varchar(32) NOT NULL,
+  agenda integer,
   hash varchar(128) NOT NULL
+  foreign key (agenda) REFERENCES Agenda (agendaid)
   -- situation TEXT CHECK( situation IN ('etudfull','etudpart','employe','autre') ) NOT NULL DEFAULT 'autre',
   
 );
