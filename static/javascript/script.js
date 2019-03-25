@@ -17,7 +17,9 @@ var initialiser_calendrier;
 initialiser_calendrier = function() {
   $('.calendar').each(function(){
     var calendar = $(this)
-    calendar.fullCalendar({});
+    calendar.fullCalendar({
+      
+    });
   })
 };
 $(document).on('turbolinks:load',initialiser_calendrier);

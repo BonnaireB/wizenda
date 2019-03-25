@@ -13,5 +13,5 @@ class Evenement:
         self.heure_fin = heure_fin
         self.recurrent = recurrent
         self.color = color
-# class Agenda:
-    # def __init__(self, evenements):   
+class Agenda:
+    def __init__(self, evenements):   
