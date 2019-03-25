@@ -1,4 +1,4 @@
-// Copyright 2018 Bonnaire Benjamin 
+// Copyright 2018 Bonnaire Benjamin Phouangsy Sophie
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,13 +13,49 @@
 // limitations under the License.
 
 // Lancée lorsque la recherche est lancée
-var initialiser_calendrier;
-initialiser_calendrier = function() {
-  $('.calendar').each(function(){
-    var calendar = $(this)
-    calendar.fullCalendar({
+function rechercher() {
+    var recherche = document.getElementById("recherche").value;
+    var champContent = document.getElementById("content");
+    if (recherche === "") {
+    } else {
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            champContent.innerHTML = xhr.responseText;
+
+            champContent.value = "";
+          } else {
+            console.log('Erreur avec le serveur');
+          }
+        }
+      };
       
-    });
-  })
-};
-$(document).on('turbolinks:load',initialiser_calendrier);
+      xhr.open("GET", "/cinq-animaux/"+recherche, true);
+      xhr.send();
+    }
+
+  }
+  function envoyerMail() {
+    var email = document.getElementById("email").value;
+    var champForm = document.getElementById("aside");
+    if (email === "") {
+    } else {
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            champForm.innerHTML = xhr.responseText;
+
+            champForm.value = "";
+          } else {
+            console.log('Erreur avec le serveur');
+          }
+        }
+      };
+      
+      xhr.open("GET", "/mail-sent/"+email, true);
+      xhr.send();
+    }
+
+  }

@@ -1,10 +1,9 @@
 
 class Utilisateur:
-    def __init__(self, nom, email, mdp, agenda):
+    def __init__(self, nom, email, mdp):
         self.nom = nom
         self.email = email
         self.mdp = mdp
-        self.agenda = agenda
 
 class Evenement:
     def __init__(self, description, heure_debut, heure_fin, recurrent, color):
@@ -13,5 +12,13 @@ class Evenement:
         self.heure_fin = heure_fin
         self.recurrent = recurrent
         self.color = color
+
+
+    def modifier_DescriptionEvenement(nouveau_description):
+        self.description = nouveau_description 
+        
+    # method for each properties()
+
 class Agenda:
-    def __init__(self, evenements):   
+    def __init__(self, email, evenements):
+        pass

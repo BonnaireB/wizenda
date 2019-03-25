@@ -1,3 +1,4 @@
+# PHOUANGSY SOPHIE PHOS06609507
 # BONNAIRE BENJAMIN BONB03049706
 from flask import Flask
 from flask import render_template
@@ -11,7 +12,6 @@ from flask import Response
 from functools import wraps
 from .database import Database
 from .objets import *
-from .email import *
 from flask import jsonify
 from random import *
 from uuid import uuid4
