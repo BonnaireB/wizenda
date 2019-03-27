@@ -14,11 +14,24 @@ class Evenement:
         self.color = color
 
 
-    def modifier_DescriptionEvenement(nouveau_description):
+    def modifier_DescriptionEvenement(self,nouveau_description):
         self.description = nouveau_description 
+
+    def modifier_heure_debut(self, heure_debut):
+        self.heure_debut = heure_debut 
+
+    def modifier_heure_fin(self, heure_fin):
+        self.heure_fin = heure_fin 
+
+    def modifier_recurrent(self, recurrent):
+        self.recurrent = recurrent
         
-    # method for each properties()
+    def modifier_color(self, color):
+        self.color = color
+        
 
 class Agenda:
     def __init__(self, email, evenements):
         pass
+
+        # method add event
