@@ -3,13 +3,25 @@ DROP TABLE Utilisateur;
 DROP TABLE Sessions;
 DROP TABLE Token;
 DROP TABLE Evenement;
+
 create table Evenement (
   id integer NOT NULL primary key AUTOINCREMENT,
   nom_event varchar( 20 ) NOT NULL,
   type_event varchar(15) NOT NULL,
-  description text NOT NULL
+  description text NOT NULL,
+  id_agenda integer NOT NULL,
+  constraint fk_id
+    FOREIGN KEY (id_agenda)
+    REFERENCES  Agenda (id)
 );
 
+create table Agenda (
+  id integer NOT NULL primary key AUTOINCREMENT,
+  id_utilisateur integer NOT NULL,
+  constraint fk_id
+    FOREIGN KEY (id_utilisateur)
+    REFERENCES Utilisateur (id)
+)
 
 create table Utilisateur (
   id integer NOT NULL primary key AUTOINCREMENT,

@@ -13,6 +13,13 @@ class Evenement:
         self.recurrent = recurrent
         self.color = color
 
+     def __init__(self, description, heure_debut, heure_fin):
+        self.description = description
+        self.heure_debut = heure_debut
+        self.heure_fin = heure_fin
+        self.recurrent = False
+        self.color = None
+
 
     def modifier_DescriptionEvenement(self,nouveau_description):
         self.description = nouveau_description 
@@ -31,7 +38,9 @@ class Evenement:
         
 
 class Agenda:
-    def __init__(self, email, evenements):
-        pass
-
-        # method add event
+    def __init__(self, email):
+        self.email = email
+        self.events = None
+        
+    def add_event(evenement):
+        events.append(evenement)
