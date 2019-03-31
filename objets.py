@@ -1,24 +1,25 @@
 
 class Utilisateur:
-    def __init__(self, nom, email, mdp):
+    def __init__(self, nom, email, mdp, jsonText):
         self.nom = nom
         self.email = email
         self.mdp = mdp
+        self.jsonText = jsonText
 
-class Evenement:
-    def __init__(self, description, heure_debut, heure_fin, recurrent, color):
-        self.description = description
-        self.heure_debut = heure_debut
-        self.heure_fin = heure_fin
-        self.recurrent = recurrent
-        self.color = color
+#class Evenement:
+ #   def __init__(self, description, heure_debut, heure_fin, recurrent, color):
+ #       self.description = description
+ #       self.heure_debut = heure_debut
+ #       self.heure_fin = heure_fin
+ #      self.recurrent = recurrent
+ #      self.color = color
 
-     def __init__(self, description, heure_debut, heure_fin):
-        self.description = description
-        self.heure_debut = heure_debut
-        self.heure_fin = heure_fin
-        self.recurrent = False
-        self.color = None
+#  def __init__(self, description, heure_debut, heure_fin):
+ #       self.description = description
+ #       self.heure_debut = heure_debut
+ #       self.heure_fin = heure_fin
+ #       self.recurrent = False  
+ #      self.color = None
 
 
     def modifier_DescriptionEvenement(self,nouveau_description):
