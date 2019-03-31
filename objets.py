@@ -43,4 +43,4 @@ class Agenda:
         self.events = None
         
     def add_event(self, evenement):
-        events.append(evenement)
+        self.events.append(evenement)
