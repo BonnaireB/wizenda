@@ -42,5 +42,5 @@ class Agenda:
         self.email = email
         self.events = None
         
-    def add_event(evenement):
+    def add_event(self, evenement):
         events.append(evenement)
