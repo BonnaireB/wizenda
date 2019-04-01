@@ -75,7 +75,7 @@ def connexion():
         id_session = uuid.uuid4().hex
         get_db().save_session(id_session, email)
         session["id"] = id_session
-        return redirect("/mes-informations")
+        return redirect("/mon-agenda")
         # Si le mot de passe ne correspond pas, on recommence
     else:
         response = make_response(
@@ -173,6 +173,15 @@ def info_client():
                                email=email, infos=info)
 
 
+# Route pour l'information client
+@app.route('/mon-agenda')
+def calendrier_user():
+    if "id" in session:
+        username = get_db().get_fname()
+        return render_template("user-calendar.html",
+                               username=username)
+
+
 
 
 # Route qui permet l'inscription d'un nouvel utilisateur
@@ -212,29 +221,17 @@ def inscription():
 
 @app.route('/test')
 def test_calendrier():
-    return render_template("tester_calendar.html")
+    if "id" in session:
+        username = get_db().get_fname()
+        return render_template("tester_calendar.html",username=username)
+    else :
+        return render_template("tester_calendar.html")
 # Route qui confirme l'inscription d'un utilisateur
 @app.route('/confirmation')
 def confirmation():
     return render_template("confirmation.html")
 
 
-# Route qui confirme l'espace de creation d'adoption
-@app.route('/ok')
-def confirmation_animal():
-    return render_template("conf-animal.html")
-
-
-# Route qui confirme l'espace de creation d'adoption
-@app.route('/reset_reinit')
-def confirmation_pwd():
-    return render_template("conf-pwd.html")
-
-
-# Route qui confirme l'espace de creation d'adoption
-@app.route('/expire')
-def expire():
-    return render_template("lien-out.html")
 
 
 # Route pour modifier son mot de passe
