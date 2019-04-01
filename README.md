@@ -14,3 +14,4 @@ le script se trouve : db/db.sql
 Il faut faire : sqlite3 db/tp2.bd
 puis on lit le fichier en faisant : .read db/db.sql
 
+TODO : Finir classe database.py pour ajouter, supprimer, modifier evenement, ajouter, supprimer, modifier agenda.

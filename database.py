@@ -66,6 +66,8 @@ class Database:
         else:
             return user[0], user[1]
 
+    
+
     # Avoir l'email de la session
     def get_email(self, id_session):
         cursor = self.get_connexion().cursor()
@@ -153,6 +155,13 @@ class Database:
             return None
         else:
             return email[0]
+
+    # Ajouter un évenement à un agenda
+    def add_event(self, id_utilisateur, evenement):
+        cursor = self.get_connexion()
+
+        cursor.execute(("INSERT INTO Evenement (id_agenda, ) "))
+
 
     # Inserer un token pour reset le mot de passe
     def single_token(self, email, exp, token):
