@@ -5,6 +5,11 @@ class Utilisateur:
         self.email = email
         self.mdp = mdp
         self.jsonText = jsonText
+    def updateJson(self,new_Text):
+        self.jsonText = new_Text
+    
+    def updateName(self,new_Name):
+        self.name = new_Name
 
 #class Evenement:
  #   def __init__(self, description, heure_debut, heure_fin, recurrent, color):
