@@ -82,14 +82,13 @@ class Database:
     # Pour obtenir toutes les infos de l'utilsateur
     def get_info(self, email):
         cursor = self.get_connexion().cursor()
-        cursor.execute(("SELECT nom"
+        cursor.execute(("SELECT *"
                         " FROM Utilisateur WHERE email=?"), (email,))
         user_info = cursor.fetchall()
         if user_info == 0:
             return None
         else:
-            return [(user[0])
-                    for user in user_info]
+            return user_info[0]
 
     # Modifie le nom de l'utilisateur
     def modify_name(self, name, email):
@@ -157,11 +156,27 @@ class Database:
             return email[0]
 
     # Ajouter un évenement à un agenda
-    def add_event(self, id_utilisateur, evenement):
+    def add_obj(self, objectif,id_utilisateur):
         cursor = self.get_connexion()
+        print(objectif.titre,"   ", id_utilisateur)
+        cursor.execute(("INSERT INTO Objectif(id_utilisateur,titre,duree,frequence)"
+                        " VALUES(?,?,?,?) "), (id_utilisateur,objectif.titre, objectif.duree, objectif.freq))
+        self.get_connexion().commit()
+    #récupère tous les objectifs associés a un utilisateur
+    def get_obj(self,id_utilisateur):
+        cursor = self.get_connexion().cursor()
+        cursor.execute(("SELECT * from Objectif WHERE id_utilisateur=?"),(id_utilisateur,))
+        objectifs = cursor.fetchall()
+        if  len(objectifs) == 0 :
+            return None
+        else:
+            return objectifs
 
-        cursor.execute(("INSERT INTO Evenement (id_agenda, ) "))
-
+    # supprimer un objectif
+    def supp_obj(self, titre,id_utilisateur):
+        cursor = self.get_connexion()
+        cursor.execute(("DELETE FROM Objectif where id_utilisateur = ? AND titre =?"), (id_utilisateur,titre))
+        cursor.commit()
 
     # Inserer un token pour reset le mot de passe
     def single_token(self, email, exp, token):

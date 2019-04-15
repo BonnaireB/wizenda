@@ -2,7 +2,7 @@
 DROP TABLE Utilisateur;
 DROP TABLE Sessions;
 DROP TABLE Token;
-DROP TABLE Evenement;
+DROP TABLE Objectif;
 
 
 create table Utilisateur (
@@ -14,6 +14,13 @@ create table Utilisateur (
   hash varchar(128) NOT NULL
   -- situation TEXT CHECK( situation IN ('etudfull','etudpart','employe','autre') ) NOT NULL DEFAULT 'autre',
   
+);
+CREATE TABLE Objectif (
+  id_utilisateur INTEGER NOT NULL,
+  titre varchar(30) NOT NULL,
+  duree REAL,
+  frequence INTEGER,
+  CHECK (frequence= 1 OR(frequence = 0))
 );
 
 create table Sessions (

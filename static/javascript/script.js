@@ -15,6 +15,7 @@
 
 window.onload = function () {
   $(document).ready(function() {
+    $('form')
     var initialLocaleCode = 'fr';
 $('#calendar').fullCalendar({
   header: {
@@ -75,17 +76,49 @@ $('#calendar').fullCalendar({
     }
   ]
   
-});
-
-var events ;
-var docValues = "[";
-  events = $('#calendar').fullCalendar('clientEvents');
-  events.forEach(element => {
-    docValues += "\n { \n title: '"+ element.title + "', \n" + "allDay: "+ element.allDay + "\n },";
-
   });
-  console.log(docValues);
- 
+//   $("#calendar").fullCalendar()
+// var events ;
+//     var appdir = "mon-agenda";
+//     var servaddrss = "http://127.0.0.1:5000/";
+//     if (events != $('#calendar').fullCalendar('clientEvents')) {
+//       var docValues = [{}];
+//       events = $('#calendar').fullCalendar('clientEvents');
+//       events.forEach(element => {
+//         var debut = "";
+//         var fin = "";
+//         if (element.start != null) {
+//           debut = element.start.toString();
+//         }
+//         if (element.end != null) {
+//           fin = element.start.toString();
+//         }
+//         var current = [{'allDay': element.allDay,'start': debut, 'end':fin, 'title': element.title, }];
+//         docValues= docValues.concat(current);
+//       });
+//       // console.log(JSON.stringify(docValues));
+//       $.ajax({
+//         type: "POST",
+//         url:servaddrss+appdir,
+//         data: JSON.stringify(docValues),
+//         dataType: 'json'
 
-});
+//       }).done(function(data){
+//         console.log("ok");
+//         console.log(data);
+//       });
+//     }
+  
+  });
 }
+
+function addObj(){
+  var titre = document.forms["obj_form"]["titre"];
+  var nb_heures = document.forms["obj_form"]["nbheures"];
+  var freq = document.forms["obj_form"]["freq"];
+  if (titre.value == "") {
+    return false;
+  }else {
+  return true;
+  }
+};

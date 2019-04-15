@@ -15,6 +15,7 @@ from flask import jsonify
 from random import *
 from uuid import uuid4
 
+import json
 import re
 import hashlib
 import uuid
@@ -137,6 +138,7 @@ def info_client():
 
     if request.method == "GET":
         info = get_db().get_info(email)
+        print(info)
         if info is None:
             return redirect('/')
         else:
@@ -165,8 +167,9 @@ def info_client():
             hashed = (hashlib.sha512(str(mdp +
                            salt).encode("utf-8")).hexdigest())
             db.modify_mdp(hashed, email)
-
+       
         info = get_db().get_info(email)
+        print(info)
         username = get_db().get_fname()
         return render_template("info-client.html", modif="OK",
                                username=username,
@@ -174,12 +177,90 @@ def info_client():
 
 
 # Route pour l'information client
-@app.route('/mon-agenda')
+@app.route('/mon-agenda', methods=["GET", "POST"])
 def calendrier_user():
+    db = get_db()
+    if request.method == "GET":
+        if "id" in session:
+            username = db.get_fname()
+            email = db.get_email(session["id"])
+            user = db.get_info(email)
+            id_utilisateur = int(user[0])
+            objectifs = db.get_obj(id_utilisateur)
+            if objectifs is None:
+                return render_template("user-calendar.html",
+                                username=username)
+            else :
+                obj_format = get_obj_list(objectifs)
+                return render_template("user-calendar.html",
+                                username=username, objectifs = obj_format)
+                        
+        else:
+            response = make_response(
+                redirect(url_for('authentification',
+                                mdp="no")))
+            return response
+        # Lorsqu'un objectif est ajouté
+    elif request.method == "POST":
+        email = None
+        if "id" in session:
+            email = db.get_email(session["id"])
+            user = db.get_info(email)
+        titre = request.form["titre"]
+        duree = int(request.form["nbheures"])
+        frequence = request.form["freq"]
+        freq = 0
+        if frequence == "semaine":
+            freq = 1
+        # Si des champs sont vides
+        if (titre == "" or duree == "" or frequence == ""):
+            return render_template("user-calendar.html",
+                                   error="Tous les champs sont obligatoires.")
+            return redirect("/mon-agenda")
+        else:
+            objec = Objectif(titre,duree,freq)
+            id_utilisateur = int(db.get_info(email)[0])
+            db.add_obj(objec,id_utilisateur)
+            return redirect("/mon-agenda")
+
+# Retourne une liste d'objet objectifs contenus dans la base de donnée
+def get_obj_list(objectifs):
+    obj_format = []
+    frequence = None
+    for item in objectifs:
+        if item[3] ==0:
+            frequence = "jour"
+        else :
+            frequence = "semaine"
+        obj_format.append(Objectif(item[1],item[2],frequence))
+    return obj_format
+        
+
+# Ajax pour le formulaire des objectifs
+@app.route('/form-obj')
+def form_obj():
+    return render_template("add_obj.html")
+    
+@app.route('/supprimer-objectif', methods=["POST"])
+def supprimer():
+    db = get_db()
     if "id" in session:
-        username = get_db().get_fname()
-        return render_template("user-calendar.html",
-                               username=username)
+        email = db.get_email(session["id"])
+        user = db.get_info(email)
+        id_utilisateur = int(user[0])
+        checked = None
+        try:
+            checked = request.form.getlist('objectifs')
+        except :
+            pass
+        for item in checked:
+            db.supp_obj(item,id_utilisateur)
+        return redirect ("/mon-agenda")
+    else:
+        response = make_response(
+            redirect(url_for('authentification',
+                            mdp="no")))
+        return response
 
 
 
@@ -191,7 +272,8 @@ def inscription():
         return redirect('/')
 
     if request.method == "GET":
-            return render_template("inscription.html")
+        print("inscipts")
+        return render_template("inscription.html")
     else:
         # On recupere toutes les donnees
         nom = request.form["nom"]
