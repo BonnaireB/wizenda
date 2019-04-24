@@ -158,7 +158,6 @@ class Database:
     # Ajouter un évenement à un agenda
     def add_obj(self, objectif,id_utilisateur):
         cursor = self.get_connexion()
-        print(objectif.titre,"   ", id_utilisateur)
         cursor.execute(("INSERT INTO Objectif(id_utilisateur,titre,duree,frequence)"
                         " VALUES(?,?,?,?) "), (id_utilisateur,objectif.titre, objectif.duree, objectif.freq))
         self.get_connexion().commit()
@@ -171,6 +170,11 @@ class Database:
             return None
         else:
             return objectifs
+    def update_json(self,json,id):
+        cursor = self.get_connexion().cursor()
+        cursor.execute(("UPDATE Utilisateur set json = ? where id = ?"),
+                       (json, id,))
+        self.get_connexion().commit()
 
     # supprimer un objectif
     def supp_obj(self, titre,id_utilisateur):

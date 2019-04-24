@@ -17,6 +17,8 @@ window.onload = function () {
   $(document).ready(function() {
     $('form')
     var initialLocaleCode = 'fr';
+    var v = document.getElementById('event_data').innerHTML
+    console.log(v)
 $('#calendar').fullCalendar({
   header: {
     left: 'prev,next today',
@@ -42,83 +44,47 @@ $('#calendar').fullCalendar({
   },
   editable: true,
   eventLimit: true, // allow "more" link when too many events
-  events: [
-    {
-      title: 'Workout',
-      start: '2019-04-01'
-    },
-    {
-      title: 'Mon Anniversaire',
-      start: '2019-04-03',
-    },
-    {
-      title: 'Conference',
-      start: '2019-05-11',
-      end: '2019-05-13'
-    },
-    {
-      title: 'Meeting',
-      start: '2019-06-12T10:30:00',
-      end: '2019-06-12T12:30:00'
-    },
-    {
-      title: 'Lunch',
-      start: '2019-04-12T12:00:00'
-    },
-    {
-      title: 'Birthday Party',
-      start: '2019-05-13T07:00:00'
-    },
-    {
-      title: 'Click for Google',
-      url: 'http://google.com/',
-      start: '2019-01-28'
+  events : '/get_events'
+  });
+  
+  $("#calendar").mouseleave(function(){
+  var events ;
+    var appdir = "/update-value";
+    if (events != $('#calendar').fullCalendar('clientEvents')) {
+      var docValues = '[';
+      events = $('#calendar').fullCalendar('clientEvents');
+      events.forEach(element => {
+        var debut = "";
+        var fin = "";
+        var title= '"'+element.title+'"'
+        if (element.start != null) {
+          debut = element.start;
+        } 
+        if (element.end != null) {
+          fin = element.end;
+        } 
+        var current = "{allDay: '"+ element.allDay+"',start: '"+debut+"', end: '"+fin+"', title: '"+title+"' },";
+
+        docValues= docValues.concat(current);
+        
+      });
+      docValues = docValues.concat("]")
+      docValues = docValues.replace(',]',']')
+      console.log(docValues)
+      $.ajax({
+        type: "POST",
+        url: appdir,
+        data: JSON.stringify(docValues)
+        // success:function(response) {
+        //   document.getElementById("disp").innerHTML =response;
+        // },
+        // error:function(){
+        //  alert("error");
+        // }
+      })
     }
-  ]
   
   });
-//   $("#calendar").fullCalendar()
-// var events ;
-//     var appdir = "mon-agenda";
-//     var servaddrss = "http://127.0.0.1:5000/";
-//     if (events != $('#calendar').fullCalendar('clientEvents')) {
-//       var docValues = [{}];
-//       events = $('#calendar').fullCalendar('clientEvents');
-//       events.forEach(element => {
-//         var debut = "";
-//         var fin = "";
-//         if (element.start != null) {
-//           debut = element.start.toString();
-//         }
-//         if (element.end != null) {
-//           fin = element.start.toString();
-//         }
-//         var current = [{'allDay': element.allDay,'start': debut, 'end':fin, 'title': element.title, }];
-//         docValues= docValues.concat(current);
-//       });
-//       // console.log(JSON.stringify(docValues));
-//       $.ajax({
-//         type: "POST",
-//         url:servaddrss+appdir,
-//         data: JSON.stringify(docValues),
-//         dataType: 'json'
+})
 
-//       }).done(function(data){
-//         console.log("ok");
-//         console.log(data);
-//       });
-//     }
-  
-  });
 }
-
-function addObj(){
-  var titre = document.forms["obj_form"]["titre"];
-  var nb_heures = document.forms["obj_form"]["nbheures"];
-  var freq = document.forms["obj_form"]["freq"];
-  if (titre.value == "") {
-    return false;
-  }else {
-  return true;
-  }
-};

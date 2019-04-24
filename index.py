@@ -48,6 +48,17 @@ def front_page():
         username = get_db().get_fname()
     return render_template('accueil.html',username = username)
 
+@app.route('/update-value', methods=["POST"])
+def update_value():
+    data = str(request.get_json(force=True))
+    db= get_db()
+    if "id" in session:
+        username = db.get_fname()
+        email = db.get_email(session["id"])
+        user = db.get_info(email)
+        id_utilisateur = int(user[0])
+        db.update_json(data,id_utilisateur)
+    return json.dumps({'status':'OK'});
 
 # Récupère les données de connexion et redirige l'utilisateur a l'index
 @app.route('/', methods=["POST"])
@@ -138,7 +149,6 @@ def info_client():
 
     if request.method == "GET":
         info = get_db().get_info(email)
-        print(info)
         if info is None:
             return redirect('/')
         else:
@@ -169,11 +179,21 @@ def info_client():
             db.modify_mdp(hashed, email)
        
         info = get_db().get_info(email)
-        print(info)
         username = get_db().get_fname()
         return render_template("info-client.html", modif="OK",
                                username=username,
                                email=email, infos=info)
+
+@app.route('/get-events')
+def get_events():
+    db = get_db()
+    if "id" in session:
+        username = db.get_fname()
+        email = db.get_email(session["id"])
+        user = db.get_info(email)
+        id_utilisateur = int(user[0])
+        json_utilisateur = user[4]
+        return dict(events = json_utilisateur)
 
 
 # Route pour l'information client
@@ -186,10 +206,12 @@ def calendrier_user():
             email = db.get_email(session["id"])
             user = db.get_info(email)
             id_utilisateur = int(user[0])
+            json_utilisateur = user[4]
+            print(json_utilisateur)
             objectifs = db.get_obj(id_utilisateur)
             if objectifs is None:
                 return render_template("user-calendar.html",
-                                username=username)
+                                username=username,events = json_utilisateur)
             else :
                 obj_format = get_obj_list(objectifs)
                 return render_template("user-calendar.html",
@@ -223,6 +245,9 @@ def calendrier_user():
             db.add_obj(objec,id_utilisateur)
             return redirect("/mon-agenda")
 
+
+
+    return array
 # Retourne une liste d'objet objectifs contenus dans la base de donnée
 def get_obj_list(objectifs):
     obj_format = []
@@ -272,7 +297,6 @@ def inscription():
         return redirect('/')
 
     if request.method == "GET":
-        print("inscipts")
         return render_template("inscription.html")
     else:
         # On recupere toutes les donnees
