@@ -17,8 +17,6 @@ window.onload = function () {
   $(document).ready(function() {
     $('form')
     var initialLocaleCode = 'fr';
-    var v = document.getElementById('event_data').innerHTML
-    console.log(v)
 $('#calendar').fullCalendar({
   header: {
     left: 'prev,next today',
@@ -44,7 +42,15 @@ $('#calendar').fullCalendar({
   },
   editable: true,
   eventLimit: true, // allow "more" link when too many events
-  events : '/get_events'
+  events: {
+    url: 'get-events',
+    error: function() {
+      $('#script-warning').show();
+    }
+  },
+  loading: function(bool) {
+    $('#loading').toggle(bool);
+  }
   });
   
   $("#calendar").mouseleave(function(){
@@ -56,14 +62,14 @@ $('#calendar').fullCalendar({
       events.forEach(element => {
         var debut = "";
         var fin = "";
-        var title= '"'+element.title+'"'
+        var title= element.title
         if (element.start != null) {
           debut = element.start;
         } 
         if (element.end != null) {
           fin = element.end;
         } 
-        var current = "{allDay: '"+ element.allDay+"',start: '"+debut+"', end: '"+fin+"', title: '"+title+"' },";
+        var current = '{"allDay": '+ element.allDay+',"start": '+debut+', "end": '+fin+', "title": "'+title+'" },';
 
         docValues= docValues.concat(current);
         

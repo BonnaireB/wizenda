@@ -188,12 +188,10 @@ def info_client():
 def get_events():
     db = get_db()
     if "id" in session:
-        username = db.get_fname()
-        email = db.get_email(session["id"])
-        user = db.get_info(email)
-        id_utilisateur = int(user[0])
-        json_utilisateur = user[4]
-        return dict(events = json_utilisateur)
+        start_date = request.args.get('start', '')
+        end_date = request.args.get('end', '')
+        with open("events/events.json", "r") as input_data:
+            return input_data.read()
 
 
 # Route pour l'information client
@@ -209,6 +207,9 @@ def calendrier_user():
             json_utilisateur = user[4]
             print(json_utilisateur)
             objectifs = db.get_obj(id_utilisateur)
+            json_utilisateur = json.loads(user[4])
+            with open("events/events.json", "w") as f:
+                json.dump(json_utilisateur,f)
             if objectifs is None:
                 return render_template("user-calendar.html",
                                 username=username,events = json_utilisateur)
