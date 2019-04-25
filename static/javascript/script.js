@@ -23,6 +23,12 @@ $('#calendar').fullCalendar({
     center: 'title',
     right: 'month,agendaWeek,agendaDay,list'
   },
+  eventRender: function(event, element) {
+    element.append( "<span class='closeon' style='top: -2px; right: 0; background-color: #FFF'>X</span>" );
+    element.find(".closeon").click(function() {
+       $('#calendar').fullCalendar('removeEvents',event._id);
+    });
+},
   navLinks: true, // can click day/week names to navigate views
   selectable: true,
   selectHelper: true,
@@ -54,7 +60,7 @@ $('#calendar').fullCalendar({
   });
   
   $("#calendar").mouseleave(function(){
-  var events ;
+    var events ;
     var appdir = "/update-value";
     if (events != $('#calendar').fullCalendar('clientEvents')) {
       var docValues = '[';

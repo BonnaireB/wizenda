@@ -21,7 +21,7 @@ import hashlib
 import uuid
 import calendar
 import datetime
-
+from .timewizzard import *
 
 app = Flask(__name__, static_url_path="", static_folder="static")
 
@@ -95,6 +95,19 @@ def connexion():
                              mdp="no")))
         return response
 
+@app.route("/timewizzard")
+def timewizzard():
+    db = get_db()
+    if "id" in session:
+        email = db.get_email(session["id"])
+        user = db.get_info(email)
+        id_utilisateur = int(user[0])
+        objectifs = db.get_obj(id_utilisateur)
+        start_date = request.args.get('start', '')
+        end_date = request.args.get('end', '')
+        with open("events/events.json", "r") as input_data:
+            timewizzard(objectifs,start_date,end_date,input_data)
+    return None
 
 # Redirige vers une page de connexion sur le site
 @app.route('/authentification', methods=["GET", "POST"])
@@ -204,15 +217,19 @@ def calendrier_user():
             email = db.get_email(session["id"])
             user = db.get_info(email)
             id_utilisateur = int(user[0])
-            json_utilisateur = user[4]
-            print(json_utilisateur)
             objectifs = db.get_obj(id_utilisateur)
-            json_utilisateur = json.loads(user[4])
-            with open("events/events.json", "w") as f:
-                json.dump(json_utilisateur,f)
+            user_calendar = user[4]
+            if user_calendar is None:
+                with open("events/events.json", "w") as f:
+                    json.dump("",f)
+            else :
+                json_utilisateur = json.loads(user[4])
+                json_utilisateur
+                with open("events/events.json", "w") as f:
+                    json.dump(json_utilisateur,f)
             if objectifs is None:
                 return render_template("user-calendar.html",
-                                username=username,events = json_utilisateur)
+                                username=username)
             else :
                 obj_format = get_obj_list(objectifs)
                 return render_template("user-calendar.html",
@@ -420,10 +437,6 @@ def mail_sent(mail):
     return render_template('mail-sent.html')
 
 
-
-# Route pour l'application API
-# @app.route('/api/agenda/', methods=["GET"])
-# def agenda():
 
 
 # # La page 404.html en cas d'erreur
