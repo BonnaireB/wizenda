@@ -80,19 +80,13 @@ $('#calendar').fullCalendar({
         docValues= docValues.concat(current);
         
       });
-      docValues = docValues.concat("]")
-      docValues = docValues.replace(',]',']')
-      console.log(docValues)
+      docValues = docValues.concat("]");
+      docValues = docValues.replace(',]',']');
+      console.log(docValues);
       $.ajax({
         type: "POST",
         url: appdir,
         data: JSON.stringify(docValues)
-        // success:function(response) {
-        //   document.getElementById("disp").innerHTML =response;
-        // },
-        // error:function(){
-        //  alert("error");
-        // }
       })
     }
   

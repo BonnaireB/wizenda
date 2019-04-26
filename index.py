@@ -204,6 +204,7 @@ def get_events():
         start_date = request.args.get('start', '')
         end_date = request.args.get('end', '')
         with open("events/events.json", "r") as input_data:
+            
             return input_data.read()
 
 
@@ -224,7 +225,7 @@ def calendrier_user():
                     json.dump("",f)
             else :
                 json_utilisateur = json.loads(user[4])
-                json_utilisateur
+                print(json_utilisateur)
                 with open("events/events.json", "w") as f:
                     json.dump(json_utilisateur,f)
             if objectifs is None:
